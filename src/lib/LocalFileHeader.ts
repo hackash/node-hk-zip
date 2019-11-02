@@ -1,6 +1,5 @@
 export class LocalFileHeader {
   private readonly data: Buffer;
-  private offset: number = 0;
   private readonly specs = {
     SIZE: 30,
     SIGNATURE: 0x04034b50,
@@ -16,8 +15,14 @@ export class LocalFileHeader {
     CENTRAL_DIR_HEADER_SIZE: 46
   };
 
-  constructor(input: Buffer) {
-    this.data = input.slice(this.offset, this.offset + this.specs.SIZE);
+  constructor(input: Buffer, offset: number) {
+    /* TODO assign offset to use later*/
+    this.data = input.slice(offset, offset + this.specs.SIZE);
+  }
+
+  public getCompressedSliceOffset(offset: number): number {
+    const binary = this.loadBinaryHeader();
+    return offset + this.specs.SIZE + binary.filenameLength + binary.extraLength;
   }
 
   public loadBinaryHeader() {
@@ -46,28 +51,4 @@ export class LocalFileHeader {
       extraLength: this.data.readUInt16LE(this.specs.EXTRA_FIELD)
     };
   }
-
-  public getHeaderSize(): number {
-    return this.specs.SIZE;
-  }
-
-  /*public getCompressedDataOffset(): number {
-    return this.offset + this.specs.SIZE + this.header.filenameLength + this.header.extraLength;
-  }
-
-  public getCompressedDataLength(): number {
-    return this.header.compressedSize;
-  }
-
-  public getCompressionMethod(): number {
-    return this.header.method;
-  }
-
-  public getLocalHeaderSize(): number {
-    //return this.specs.CENTRAL_DIR_HEADER_SIZE + this.header.filenameLength + this.header.extraLength + _comLen;
-  }
-
-  public getParsedHeader() {
-    return this.header;
-  }*/
 }

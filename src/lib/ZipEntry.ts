@@ -29,6 +29,7 @@ export class ZipEntry {
 
   private initiateFields(offset: number): void {
     const parsedCentralDir = this.centralDir.loadBinaryHeader();
+    console.log('CENTRAL DIR', parsedCentralDir);
     this.name = this.data.slice(offset, offset + parsedCentralDir.filenameLength);
     if (parsedCentralDir.extraFieldLength) {
       this.extra = this.data.slice(offset, offset + parsedCentralDir.extraFieldLength);
@@ -40,13 +41,14 @@ export class ZipEntry {
 
   public getData(): any {
     const compressed = this.fetchRawCompressedData();
-    if (compressed.length === 0) {
+    /*if (compressed.length === 0) {
       throw new Error('No data compressed');
-    }
+    }*/
     /* Parsing twice not a good idea, TODO: move to constructor */
     const parsedCentralDir = this.centralDir.loadBinaryHeader();
     switch (parsedCentralDir.method) {
       case this.methods.DEFLATED:
+        console.log(this.name.toString(), 'Deflated');
         if (!this.isDirectory()) {
           const inflate = new MethodInflate(compressed);
           inflate.inflate((data) => {
@@ -81,22 +83,19 @@ export class ZipEntry {
 
   /* TODO: call this on entry to get row compression, decompress should use this */
   private fetchRawCompressedData(): Buffer {
-    const localFileHeader = new LocalFileHeader(this.data);
-    const parsedLocalFileHeader = localFileHeader.loadBinaryHeader();
-    const offset = 0;
-    const dataOffset = offset + localFileHeader.getHeaderSize() + parsedLocalFileHeader.filenameLength + parsedLocalFileHeader.extraLength;
-    return this.data.slice(dataOffset, dataOffset + parsedLocalFileHeader.compressedSize);
-  }
-
-  private getCompressedDataSize(): number {
-    return this.fetchRawCompressedData().length;
+    const parsedCentralDir = this.centralDir.loadBinaryHeader();
+    /* TODO pass offset to constructor only*/
+    const localFileHeader = new LocalFileHeader(this.data, parsedCentralDir.offset);
+    const start = localFileHeader.getCompressedSliceOffset(parsedCentralDir.offset);
+    const end = parsedCentralDir.compressedSize;
+    return this.data.slice(start, start + end);
   }
 
   public getInfo(): any {
     return {
       path: this.name.toString(),
       isDirectory: this.isDirectory(),
-      size: this.getCompressedDataSize(),
+      size: this.fetchRawCompressedData().length,
       name: path.basename(this.name.toString())
     };
   }
