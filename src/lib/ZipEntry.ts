@@ -1,8 +1,8 @@
+import path from 'path';
+
 import { CentralDirectory } from './CentralDirectory';
 import { LocalFileHeader } from './LocalFileHeader';
 import { MethodInflate } from './MethodInflate';
-
-/*const { StringDecoder } = require('string_decoder');*/
 
 export class ZipEntry {
   private readonly data: Buffer;
@@ -88,10 +88,16 @@ export class ZipEntry {
     return this.data.slice(dataOffset, dataOffset + parsedLocalFileHeader.compressedSize);
   }
 
+  private getCompressedDataSize(): number {
+    return this.fetchRawCompressedData().length;
+  }
+
   public getInfo(): any {
     return {
-      name: this.name.toString(),
-      isDirectory: this.isDirectory()
+      path: this.name.toString(),
+      isDirectory: this.isDirectory(),
+      size: this.getCompressedDataSize(),
+      name: path.basename(this.name.toString())
     };
   }
 

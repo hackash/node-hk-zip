@@ -9,7 +9,7 @@ export class ZipFile {
     this.data = data;
   }
 
-  public listEntries() {
+  public listEntries(): Array<ZipEntry> {
     const centralDirEnd = new EndOfCentralDirectory(this.data);
     const parsed = centralDirEnd.loadBinaryHeader();
     let index = parsed.offset;
