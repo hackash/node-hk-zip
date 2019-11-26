@@ -1,5 +1,8 @@
 export class LocalFileHeader {
+  public offset: number = 0;
   private readonly data: Buffer;
+  private parsed: any = {}; // TODO create an interface for this
+
   private readonly specs = {
     SIZE: 30,
     SIGNATURE: 0x04034b50,
@@ -17,12 +20,13 @@ export class LocalFileHeader {
 
   constructor(input: Buffer, offset: number) {
     /* TODO assign offset to use later*/
+    this.offset = offset;
     this.data = input.slice(offset, offset + this.specs.SIZE);
+    this.parsed = this.loadBinaryHeader();
   }
 
   public getCompressedSliceOffset(offset: number): number {
-    const binary = this.loadBinaryHeader();
-    return offset + this.specs.SIZE + binary.filenameLength + binary.extraLength;
+    return offset + this.specs.SIZE + this.parsed.filenameLength + this.parsed.extraLength;
   }
 
   public loadBinaryHeader() {
@@ -50,5 +54,9 @@ export class LocalFileHeader {
       // extra field length
       extraLength: this.data.readUInt16LE(this.specs.EXTRA_FIELD)
     };
+  }
+
+  public getCRC32(): number {
+    return this.parsed.crc;
   }
 }

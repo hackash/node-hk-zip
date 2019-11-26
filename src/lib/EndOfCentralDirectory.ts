@@ -1,5 +1,6 @@
 export class EndOfCentralDirectory {
   private readonly offset: number;
+  private parsed: any; // todo create and interface for this
   private readonly data: Buffer;
 
   private readonly specs = {
@@ -15,12 +16,12 @@ export class EndOfCentralDirectory {
   constructor(input: Buffer) {
     this.offset = this.findSelfOffset(input);
     this.data = input.slice(this.offset, this.offset + this.specs.SIZE);
+    this.parsed = this.loadBinaryHeader();
   }
 
   private findSelfOffset(data: Buffer): number {
     let i = data.length - this.specs.SIZE;
-    /* The combined length of any directory record and these three fields SHOULD NOT generally exceed 65,535 bytes. */
-    let n = Math.max(0, 0XFFF);
+    let n = Math.max(0, i - 0XFFF);
     let end = -1;
     for (i; i >= n; i--) {
       if (data[i] !== 0x50) continue; // quick check that the byte is 'P'
@@ -52,6 +53,14 @@ export class EndOfCentralDirectory {
       // zip file comment length
       commentLength: this.data.readUInt16LE(this.specs.COMMENT_LENGTH)
     };
+  }
+
+  public getNumberOfEntries(): number {
+    return this.parsed.numberOfEntries;
+  }
+
+  public getOffset(): number {
+    return this.parsed.offset;
   }
 
   public getSize() {

@@ -1,6 +1,8 @@
 export class CentralDirectory {
-  private readonly offset: number = 0;
+  public readonly offset: number = 0;
   private readonly data: Buffer;
+  private parsed: any = {}; // todo add interface for this
+
   private readonly specs = {
     SIZE: 46, // CEN header size
     SIGNATURE: 0x02014b50, // "PK\001\002"
@@ -22,15 +24,11 @@ export class CentralDirectory {
   };
 
   constructor(input: Buffer, offset: number) {
-    this.offset = offset;
-    this.data = input.slice(this.offset, this.offset + this.specs.SIZE);
+    this.data = input.slice(offset, offset + this.specs.SIZE);
+    this.parsed = this.loadBinaryHeader();
   }
 
-  public getSize(): number {
-    return this.specs.SIZE;
-  }
-
-  public loadBinaryHeader() {
+  private loadBinaryHeader() {
     if (this.data.length !== this.specs.SIZE || this.data.readUInt32LE(0) !== this.specs.SIGNATURE) {
       throw new Error('Wrong local file header');
     }
@@ -67,5 +65,33 @@ export class CentralDirectory {
       // LOC header offset
       offset: this.data.readUInt32LE(this.specs.OFFSET)
     };
+  }
+
+  public getFilenameLength(): number {
+    return this.parsed.filenameLength;
+  }
+
+  public getExtraFieldLength(): number {
+    return this.parsed.extraFieldLength;
+  }
+
+  public getLocalHeaderOffset(): number {
+    return this.parsed.offset;
+  }
+
+  public getCompressedSize(): number {
+    return this.parsed.compressedSize;
+  }
+
+  public getCompressionMethod(): number {
+    return this.parsed.method;
+  }
+
+  public getFlags(): number {
+    return this.parsed.flags;
+  }
+
+  public getSize(): number {
+    return this.specs.SIZE;
   }
 }

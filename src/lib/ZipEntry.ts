@@ -3,77 +3,70 @@ import path from 'path';
 import { CentralDirectory } from './CentralDirectory';
 import { LocalFileHeader } from './LocalFileHeader';
 import { MethodInflate } from './MethodInflate';
+import { DataDescriptor } from './DataDescriptor';
+import CRC32 from './CRC32';
 
 export class ZipEntry {
   private readonly data: Buffer;
-  private centralDir: CentralDirectory;
+  private CDH: CentralDirectory;
+  private LFH: LocalFileHeader;
   private methods: any = {
     DEFLATED: 8,
     STORED: 0
   };
 
   public name: Buffer;
-  public extra: Buffer;
-  public comment: Buffer;
 
   constructor(data: Buffer) {
     this.data = data;
   }
 
   public setCentralDirOffset(offset: number): ZipEntry {
-    this.centralDir = new CentralDirectory(this.data, offset);
-    const fieldOffset = this.centralDir.getSize() + offset;
+    this.CDH = new CentralDirectory(this.data, offset);
+    const fieldOffset = this.CDH.getSize() + offset;
     this.initiateFields(fieldOffset);
     return this;
   }
 
   private initiateFields(offset: number): void {
-    const parsedCentralDir = this.centralDir.loadBinaryHeader();
-    console.log('CENTRAL DIR', parsedCentralDir);
-    this.name = this.data.slice(offset, offset + parsedCentralDir.filenameLength);
-    if (parsedCentralDir.extraFieldLength) {
-      this.extra = this.data.slice(offset, offset + parsedCentralDir.extraFieldLength);
-    }
-    if (parsedCentralDir.commentLength) {
-      this.comment = this.data.slice(offset, offset + parsedCentralDir.commentLength);
-    }
+    this.name = this.data.slice(offset, offset + this.CDH.getFilenameLength());
   }
 
-  public getData(): any {
+  private verifyChecksum(data, ext): boolean {
+    if ((this.CDH.getFlags() & 0x8) !== 0x8) {
+      /* TODO calculate and compare CRC */
+      // CRC32.calculate(data) === this.LFH.getCRC32();
+    } else {
+      const DDH = new DataDescriptor(this.data, ext);
+      console.log('DDH', DDH);
+      /* TODO calculate and compare CRC */
+      // CRC32.calculate(data) === this.DDH.getCRC32();
+    }
+    /* Mocking this now, TODO implement proper CRC calculation later */
+    return CRC32.calculate(data) === 0;
+  }
+
+  public async getData(): Promise<any> { /* TODO change return type */
     const compressed = this.fetchRawCompressedData();
-    /*if (compressed.length === 0) {
-      throw new Error('No data compressed');
-    }*/
-    /* Parsing twice not a good idea, TODO: move to constructor */
-    const parsedCentralDir = this.centralDir.loadBinaryHeader();
-    switch (parsedCentralDir.method) {
+    switch (this.CDH.getCompressionMethod()) {
       case this.methods.DEFLATED:
-        console.log(this.name.toString(), 'Deflated');
         if (!this.isDirectory()) {
           const inflate = new MethodInflate(compressed);
-          inflate.inflate((data) => {
-            console.log('Inflated', data);
-          });
+          return inflate.start();
         } else {
           console.log('No method to inflate dirs');
         }
         break;
       case this.methods.STORED:
-        console.log('Stored');
+        /*console.log('Stored');*/
         break;
       default:
         throw new Error('Unsupported compression');
     }
   }
 
-  public getHeader() {
-    return this.centralDir.loadBinaryHeader();
-  }
-
   public getEntryHeaderSize(): number {
-    /* Parsing twice not a good idea, TODO: remove duplicates */
-    const parsedCentralDir = this.centralDir.loadBinaryHeader();
-    return this.centralDir.getSize() + parsedCentralDir.filenameLength + parsedCentralDir.extraFieldLength;
+    return this.CDH.getSize() + this.CDH.getFilenameLength() + this.CDH.getExtraFieldLength();
   }
 
   private isDirectory(): boolean {
@@ -81,21 +74,23 @@ export class ZipEntry {
     return last === 47 || last === 92;
   }
 
-  /* TODO: call this on entry to get row compression, decompress should use this */
   private fetchRawCompressedData(): Buffer {
-    const parsedCentralDir = this.centralDir.loadBinaryHeader();
-    /* TODO pass offset to constructor only*/
-    const localFileHeader = new LocalFileHeader(this.data, parsedCentralDir.offset);
-    const start = localFileHeader.getCompressedSliceOffset(parsedCentralDir.offset);
-    const end = parsedCentralDir.compressedSize;
-    return this.data.slice(start, start + end);
+    const offset = this.CDH.getLocalHeaderOffset();
+    this.LFH = new LocalFileHeader(this.data, offset);
+    const start = this.LFH.getCompressedSliceOffset(offset);
+    const end = this.CDH.getCompressedSize();
+    const compressed = this.data.slice(start, start + end);
+    if (this.verifyChecksum(compressed, start + end)) {
+      return compressed;
+    }
+    throw new Error('Unable to verify CRC32');
   }
 
-  public getInfo(): any {
+  public describe(): any {
     return {
       path: this.name.toString(),
       isDirectory: this.isDirectory(),
-      size: this.fetchRawCompressedData().length,
+      size: this.data.length,
       name: path.basename(this.name.toString())
     };
   }

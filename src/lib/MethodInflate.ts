@@ -7,21 +7,18 @@ export class MethodInflate {
     this.data = data;
   }
 
-  public inflate(callback: Function) {
+  public start(): Promise<Buffer> {
     const inflate = zlb.createInflateRaw();
+    return new Promise((resolve, reject) => {
+      inflate.on('data', (data) => {
+        resolve(data);
+      });
 
-    inflate.on('data', (data) => {
-      callback(data);
+      inflate.on('error', (e) => {
+        reject(e);
+      });
+
+      inflate.end(this.data);
     });
-
-    inflate.on('end', () => {
-      console.log('end');
-    });
-
-    inflate.on('error', (e) => {
-      console.log('error', e);
-    });
-
-    inflate.end(this.data);
   }
 }

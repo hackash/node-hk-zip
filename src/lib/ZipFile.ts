@@ -3,6 +3,7 @@ import { ZipEntry } from './ZipEntry';
 
 export class ZipFile {
 
+  private EOCDH: EndOfCentralDirectory;
   private readonly data: Buffer;
 
   constructor(data: Buffer) {
@@ -10,11 +11,11 @@ export class ZipFile {
   }
 
   public listEntries(): Array<ZipEntry> {
-    const centralDirEnd = new EndOfCentralDirectory(this.data);
-    const parsed = centralDirEnd.loadBinaryHeader();
-    let index = parsed.offset;
+    this.EOCDH = new EndOfCentralDirectory(this.data);
+    let index = this.EOCDH.getOffset();
+    let count = this.EOCDH.getNumberOfEntries();
     const list = [];
-    for (let i = 0; i < parsed.numberOfEntries; i++) {
+    for (let i = 0; i < count; i++) {
       const entry = new ZipEntry(this.data).setCentralDirOffset(index);
       index += entry.getEntryHeaderSize();
       list.push(entry);
