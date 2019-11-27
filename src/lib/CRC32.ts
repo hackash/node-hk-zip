@@ -20,6 +20,7 @@ export default class CRC32 {
     crc = ~c1;
     buffer.writeInt32LE(crc & 0xffffffff, 0);
     // return buffer.readUInt32LE(0);
+    /* TODO return calculated CRC */
     return 0;
   };
 }

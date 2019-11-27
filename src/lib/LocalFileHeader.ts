@@ -19,14 +19,13 @@ export class LocalFileHeader {
   };
 
   constructor(input: Buffer, offset: number) {
-    /* TODO assign offset to use later*/
     this.offset = offset;
     this.data = input.slice(offset, offset + this.specs.SIZE);
     this.parsed = this.loadBinaryHeader();
   }
 
   public getCompressedSliceOffset(offset: number): number {
-    return offset + this.specs.SIZE + this.parsed.filenameLength + this.parsed.extraLength;
+    return offset + this.specs.SIZE + this.parsed.FILENAME_LENGTH + this.parsed.EXTRA_FIELD_LENGTH;
   }
 
   public loadBinaryHeader() {
@@ -36,27 +35,27 @@ export class LocalFileHeader {
 
     return {
       // version needed to extract
-      version: this.data.readUInt16LE(this.specs.VERSION),
+      VERSION: this.data.readUInt16LE(this.specs.VERSION),
       // general purpose bit flag
-      flags: this.data.readUInt16LE(this.specs.GENERAL_BIT_FLAG),
+      FLAGS: this.data.readUInt16LE(this.specs.GENERAL_BIT_FLAG),
       // compression method
-      method: this.data.readUInt16LE(this.specs.COMPRESSION_METHOD),
+      METHOD: this.data.readUInt16LE(this.specs.COMPRESSION_METHOD),
       // modification time (2 bytes time, 2 bytes date)
-      time: this.data.readUInt32LE(this.specs.MODIFICATION_TIME),
+      TIME: this.data.readUInt32LE(this.specs.MODIFICATION_TIME),
       // uncompressed file crc-32 value
-      crc: this.data.readUInt32LE(this.specs.CRC_32),
+      CRC: this.data.readUInt32LE(this.specs.CRC_32),
       // compressed size
-      compressedSize: this.data.readUInt32LE(this.specs.COMPRESSED_SIZE),
+      COMPRESSED_SIZE: this.data.readUInt32LE(this.specs.COMPRESSED_SIZE),
       // uncompressed size
-      size: this.data.readUInt32LE(this.specs.UNCOMPRESSED_SIZE),
+      SIZE: this.data.readUInt32LE(this.specs.UNCOMPRESSED_SIZE),
       // filename length
-      filenameLength: this.data.readUInt16LE(this.specs.FILENAME_LENGTH),
+      FILENAME_LENGTH: this.data.readUInt16LE(this.specs.FILENAME_LENGTH),
       // extra field length
-      extraLength: this.data.readUInt16LE(this.specs.EXTRA_FIELD)
+      EXTRA_FIELD_LENGTH: this.data.readUInt16LE(this.specs.EXTRA_FIELD)
     };
   }
 
   public getCRC32(): number {
-    return this.parsed.crc;
+    return this.parsed.CRC;
   }
 }

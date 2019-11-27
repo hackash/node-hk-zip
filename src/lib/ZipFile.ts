@@ -17,7 +17,7 @@ export class ZipFile {
     const list = [];
     for (let i = 0; i < count; i++) {
       const entry = new ZipEntry(this.data).setCentralDirOffset(index);
-      index += entry.getEntryHeaderSize();
+      index += entry.getLocalHeaderSize();
       list.push(entry);
     }
     return list;

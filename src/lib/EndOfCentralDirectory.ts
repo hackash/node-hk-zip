@@ -43,24 +43,24 @@ export class EndOfCentralDirectory {
     }
     return {
       // number of entries on this volume
-      numberOfEntries: this.data.readUInt16LE(this.specs.NUMBER_OF_ENTRIES),
+      NUMBER_OF_ENTRIES: this.data.readUInt16LE(this.specs.NUMBER_OF_ENTRIES),
       // total number of entries
-      totalEntries: this.data.readUInt16LE(this.specs.TOTAL_NUMBER_OF_ENTRIES),
+      TOTAL_NUMBER_OF_ENTRIES: this.data.readUInt16LE(this.specs.TOTAL_NUMBER_OF_ENTRIES),
       // central directory size in bytes
-      size: this.data.readUInt32LE(this.specs.CENTRAL_DIR_SIZE),
+      SIZE: this.data.readUInt32LE(this.specs.CENTRAL_DIR_SIZE),
       // offset of first CEN header
-      offset: this.data.readUInt32LE(this.specs.CENTRAL_DIR_OFFSET),
+      OFFSET: this.data.readUInt32LE(this.specs.CENTRAL_DIR_OFFSET),
       // zip file comment length
-      commentLength: this.data.readUInt16LE(this.specs.COMMENT_LENGTH)
+      COMMENT_LENGTH: this.data.readUInt16LE(this.specs.COMMENT_LENGTH)
     };
   }
 
   public getNumberOfEntries(): number {
-    return this.parsed.numberOfEntries;
+    return this.parsed.NUMBER_OF_ENTRIES;
   }
 
   public getOffset(): number {
-    return this.parsed.offset;
+    return this.parsed.OFFSET;
   }
 
   public getSize() {

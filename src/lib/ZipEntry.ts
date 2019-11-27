@@ -2,14 +2,15 @@ import path from 'path';
 
 import { CentralDirectory } from './CentralDirectory';
 import { LocalFileHeader } from './LocalFileHeader';
-import { MethodInflate } from './MethodInflate';
 import { DataDescriptor } from './DataDescriptor';
+import { MethodInflate } from './MethodInflate';
 import CRC32 from './CRC32';
 
 export class ZipEntry {
   private readonly data: Buffer;
   private CDH: CentralDirectory;
   private LFH: LocalFileHeader;
+
   private methods: any = {
     DEFLATED: 8,
     STORED: 0
@@ -53,8 +54,6 @@ export class ZipEntry {
         if (!this.isDirectory()) {
           const inflate = new MethodInflate(compressed);
           return inflate.start();
-        } else {
-          console.log('No method to inflate dirs');
         }
         break;
       case this.methods.STORED:
@@ -65,8 +64,8 @@ export class ZipEntry {
     }
   }
 
-  public getEntryHeaderSize(): number {
-    return this.CDH.getSize() + this.CDH.getFilenameLength() + this.CDH.getExtraFieldLength();
+  public getLocalHeaderSize(): number {
+    return this.CDH.getLocalHeaderSize();
   }
 
   private isDirectory(): boolean {

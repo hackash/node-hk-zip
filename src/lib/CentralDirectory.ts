@@ -35,44 +35,44 @@ export class CentralDirectory {
 
     return {
       // version made by
-      versionMade: this.data.readUInt16LE(this.specs.VERSION_MADE),
+      VERSION_MADE: this.data.readUInt16LE(this.specs.VERSION_MADE),
       // version needed to extract
-      versionExtract: this.data.readUInt16LE(this.specs.VERSION_EXTRACT),
+      VERSION_EXTRACT: this.data.readUInt16LE(this.specs.VERSION_EXTRACT),
       // encrypt, decrypt flags
-      flags: this.data.readUInt16LE(this.specs.FLAGS),
+      FLAGS: this.data.readUInt16LE(this.specs.FLAGS),
       // compression method
-      method: this.data.readUInt16LE(this.specs.METHOD),
+      METHOD: this.data.readUInt16LE(this.specs.METHOD),
       // modification time (2 bytes time, 2 bytes date)
-      time: this.data.readUInt32LE(this.specs.TIME),
+      TIME: this.data.readUInt32LE(this.specs.TIME),
       // uncompressed file crc-32 value
-      crc: this.data.readUInt32LE(this.specs.CRC_32),
+      CRC: this.data.readUInt32LE(this.specs.CRC_32),
       // compressed size
-      compressedSize: this.data.readUInt32LE(this.specs.COMPRESSED_SIZE),
+      COMPRESSED_SIZE: this.data.readUInt32LE(this.specs.COMPRESSED_SIZE),
       // uncompressed size
-      decompressedSize: this.data.readUInt32LE(this.specs.DECOMPRESSED_SIZE),
+      DECOMPRESSED_SIZE: this.data.readUInt32LE(this.specs.DECOMPRESSED_SIZE),
       // filename length
-      filenameLength: this.data.readUInt16LE(this.specs.FILENAME_LENGTH),
+      FILENAME_LENGTH: this.data.readUInt16LE(this.specs.FILENAME_LENGTH),
       // extra field length
-      extraFieldLength: this.data.readUInt16LE(this.specs.EXTRA_FIELD),
+      EXTRA_FIELD_LENGTH: this.data.readUInt16LE(this.specs.EXTRA_FIELD),
       // file comment length
-      commentLength: this.data.readUInt16LE(this.specs.COMMENT_LENGTH),
+      COMMENT_LENGTH: this.data.readUInt16LE(this.specs.COMMENT_LENGTH),
       // volume number start
-      diskStart: this.data.readUInt16LE(this.specs.DISK_START),
+      DISK_START: this.data.readUInt16LE(this.specs.DISK_START),
       // internal file attributes
-      internalAttributes: this.data.readUInt16LE(this.specs.INTERNAL_ATTRIBUTES),
+      INTERNAL_ATTRIBUTES: this.data.readUInt16LE(this.specs.INTERNAL_ATTRIBUTES),
       // external file attributes
-      externalAttributes: this.data.readUInt32LE(this.specs.EXTERNAL_ATTRIBUTES),
+      EXTERNAL_ATTRIBUTES: this.data.readUInt32LE(this.specs.EXTERNAL_ATTRIBUTES),
       // LOC header offset
-      offset: this.data.readUInt32LE(this.specs.OFFSET)
+      OFFSET: this.data.readUInt32LE(this.specs.OFFSET)
     };
   }
 
-  public getFilenameLength(): number {
-    return this.parsed.filenameLength;
+  public getLocalHeaderSize(): number {
+    return this.specs.SIZE + this.parsed.FILENAME_LENGTH + this.parsed.EXTRA_FIELD_LENGTH;
   }
 
-  public getExtraFieldLength(): number {
-    return this.parsed.extraFieldLength;
+  public getFilenameLength(): number {
+    return this.parsed.FILENAME_LENGTH;
   }
 
   public getLocalHeaderOffset(): number {
