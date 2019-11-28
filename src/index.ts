@@ -2,7 +2,7 @@ import { ZipFile } from './lib/ZipFile';
 
 const fs = require('fs');
 
-const buffer = fs.readFileSync('./assets/test-zip.zip');
+const buffer = fs.readFileSync('./assets/app-debug.apk');
 
 const zip = new ZipFile(buffer);
 const entries = zip.listEntries();

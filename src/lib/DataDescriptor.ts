@@ -1,9 +1,9 @@
-import { DataDescriptorByteMapType } from './types/DataDescriptorByteMapType';
+import { IDataDescriptorByteMap, IParsedDataDescriptor } from './interfaces/DataDescriptorByteMapType';
 import { DATA_DESCRIPTOR_MAP } from './ZipByteMap';
 
 export class DataDescriptor {
   private readonly data: Buffer;
-  private readonly byteMap: DataDescriptorByteMapType = DATA_DESCRIPTOR_MAP;
+  private readonly byteMap: IDataDescriptorByteMap = DATA_DESCRIPTOR_MAP;
 
   private parsed: any = {};
 
@@ -12,13 +12,13 @@ export class DataDescriptor {
     this.parsed = this.loadBinaryHeader();
   }
 
-  public loadBinaryHeader() {
+  public loadBinaryHeader(): IParsedDataDescriptor {
     if (this.data.length !== this.byteMap.SIZE || this.data.readUInt32LE(0) !== this.byteMap.SIGNATURE) {
       throw new Error('Wrong data descriptor');
     }
     return {
       CRC: this.data.readUInt32LE(this.byteMap.CRC),
-      SIZE: this.data.readUInt32LE(this.byteMap.COMPRESSED_SIZE),
+      COMPRESSED_SIZE: this.data.readUInt32LE(this.byteMap.COMPRESSED_SIZE),
       UNCOMPRESSED_SIZE: this.data.readUInt32LE(this.byteMap.UNCOMPRESSED_SIZE)
     };
   }
