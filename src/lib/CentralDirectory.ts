@@ -1,74 +1,58 @@
+import { CentralDirByteMapType } from './types/CentralDirByteMapType';
+import { CENTRAL_DIR_MAP } from './ZipByteMap';
+
 export class CentralDirectory {
   public readonly offset: number = 0;
   private readonly data: Buffer;
+  private byteMap: CentralDirByteMapType = CENTRAL_DIR_MAP;
   private parsed: any = {}; // todo add interface for this
 
-  private readonly specs = {
-    SIZE: 46, // CEN header size
-    SIGNATURE: 0x02014b50, // "PK\001\002"
-    VERSION_MADE: 4, // version made by
-    VERSION_EXTRACT: 6, // version needed to extract
-    FLAGS: 8, // encrypt, decrypt flags
-    METHOD: 10, // compression method
-    TIME: 12, // modification time (2 bytes time, 2 bytes date)
-    CRC_32: 16, // uncompressed file crc-32 value
-    COMPRESSED_SIZE: 20, // compressed size
-    DECOMPRESSED_SIZE: 24, // uncompressed size
-    FILENAME_LENGTH: 28, // filename length
-    EXTRA_FIELD: 30, // extra field length
-    COMMENT_LENGTH: 32, // file comment length
-    DISK_START: 34, // volume number start
-    INTERNAL_ATTRIBUTES: 36, // internal file attributes
-    EXTERNAL_ATTRIBUTES: 38, // external file attributes (host system dependent)
-    OFFSET: 42 // LOC header offset
-  };
-
   constructor(input: Buffer, offset: number) {
-    this.data = input.slice(offset, offset + this.specs.SIZE);
+    this.data = input.slice(offset, offset + this.byteMap.SIZE);
     this.parsed = this.loadBinaryHeader();
   }
 
   private loadBinaryHeader() {
-    if (this.data.length !== this.specs.SIZE || this.data.readUInt32LE(0) !== this.specs.SIGNATURE) {
+    if (this.data.length !== this.byteMap.SIZE || this.data.readUInt32LE(0) !== this.byteMap.SIGNATURE) {
       throw new Error('Wrong local file header');
     }
 
     return {
       // version made by
-      VERSION_MADE: this.data.readUInt16LE(this.specs.VERSION_MADE),
+      VERSION_MADE: this.data.readUInt16LE(this.byteMap.VERSION_MADE),
       // version needed to extract
-      VERSION_EXTRACT: this.data.readUInt16LE(this.specs.VERSION_EXTRACT),
+      VERSION_EXTRACT: this.data.readUInt16LE(this.byteMap.VERSION_EXTRACT),
       // encrypt, decrypt flags
-      FLAGS: this.data.readUInt16LE(this.specs.FLAGS),
+      FLAGS: this.data.readUInt16LE(this.byteMap.FLAGS),
       // compression method
-      METHOD: this.data.readUInt16LE(this.specs.METHOD),
+      METHOD: this.data.readUInt16LE(this.byteMap.METHOD),
       // modification time (2 bytes time, 2 bytes date)
-      TIME: this.data.readUInt32LE(this.specs.TIME),
+      TIME: this.data.readUInt32LE(this.byteMap.TIME),
       // uncompressed file crc-32 value
-      CRC: this.data.readUInt32LE(this.specs.CRC_32),
+      CRC: this.data.readUInt32LE(this.byteMap.CRC_32),
       // compressed size
-      COMPRESSED_SIZE: this.data.readUInt32LE(this.specs.COMPRESSED_SIZE),
+      COMPRESSED_SIZE: this.data.readUInt32LE(this.byteMap.COMPRESSED_SIZE),
       // uncompressed size
-      DECOMPRESSED_SIZE: this.data.readUInt32LE(this.specs.DECOMPRESSED_SIZE),
+      DECOMPRESSED_SIZE: this.data.readUInt32LE(this.byteMap.DECOMPRESSED_SIZE),
       // filename length
-      FILENAME_LENGTH: this.data.readUInt16LE(this.specs.FILENAME_LENGTH),
+      FILENAME_LENGTH: this.data.readUInt16LE(this.byteMap.FILENAME_LENGTH),
       // extra field length
-      EXTRA_FIELD_LENGTH: this.data.readUInt16LE(this.specs.EXTRA_FIELD),
+      EXTRA_FIELD_LENGTH: this.data.readUInt16LE(this.byteMap.EXTRA_FIELD),
       // file comment length
-      COMMENT_LENGTH: this.data.readUInt16LE(this.specs.COMMENT_LENGTH),
+      COMMENT_LENGTH: this.data.readUInt16LE(this.byteMap.COMMENT_LENGTH),
       // volume number start
-      DISK_START: this.data.readUInt16LE(this.specs.DISK_START),
+      DISK_START: this.data.readUInt16LE(this.byteMap.DISK_START),
       // internal file attributes
-      INTERNAL_ATTRIBUTES: this.data.readUInt16LE(this.specs.INTERNAL_ATTRIBUTES),
+      INTERNAL_ATTRIBUTES: this.data.readUInt16LE(this.byteMap.INTERNAL_ATTRIBUTES),
       // external file attributes
-      EXTERNAL_ATTRIBUTES: this.data.readUInt32LE(this.specs.EXTERNAL_ATTRIBUTES),
+      EXTERNAL_ATTRIBUTES: this.data.readUInt32LE(this.byteMap.EXTERNAL_ATTRIBUTES),
       // LOC header offset
-      OFFSET: this.data.readUInt32LE(this.specs.OFFSET)
+      OFFSET: this.data.readUInt32LE(this.byteMap.OFFSET)
     };
   }
 
   public getLocalHeaderSize(): number {
-    return this.specs.SIZE + this.parsed.FILENAME_LENGTH + this.parsed.EXTRA_FIELD_LENGTH;
+    return this.byteMap.SIZE + this.parsed.FILENAME_LENGTH + this.parsed.EXTRA_FIELD_LENGTH;
   }
 
   public getFilenameLength(): number {
@@ -92,6 +76,6 @@ export class CentralDirectory {
   }
 
   public getSize(): number {
-    return this.specs.SIZE;
+    return this.byteMap.SIZE;
   }
 }
