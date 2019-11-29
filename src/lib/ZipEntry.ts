@@ -1,8 +1,8 @@
 import path from 'path';
 
-import { CentralDirectory } from './CentralDirectory';
-import { LocalFileHeader } from './LocalFileHeader';
-import { DataDescriptor } from './DataDescriptor';
+import { CentralDirectory } from './headers/CentralDirectory';
+import { LocalFileHeader } from './headers/LocalFileHeader';
+import { DataDescriptor } from './headers/DataDescriptor';
 import { MethodInflate } from './MethodInflate';
 import CRC32 from './CRC32';
 

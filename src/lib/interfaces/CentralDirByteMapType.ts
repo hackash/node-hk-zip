@@ -1,3 +1,5 @@
+import { BaseByteMap } from './BaseByteMap';
+
 export interface IParsedCentralDir {
   VERSION_MADE: number,
   VERSION_EXTRACT: number,
@@ -17,7 +19,4 @@ export interface IParsedCentralDir {
   OFFSET: number
 }
 
-export interface ICentralDirByteMap extends IParsedCentralDir {
-  SIZE: number,
-  SIGNATURE: number
-}
+export interface ICentralDirByteMap extends IParsedCentralDir, BaseByteMap {}

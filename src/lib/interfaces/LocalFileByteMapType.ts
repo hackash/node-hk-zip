@@ -1,3 +1,5 @@
+import { BaseByteMap } from './BaseByteMap';
+
 export interface IParsedLocalFile {
   COMPRESSION_METHOD: number,
   VERSION: number,
@@ -11,7 +13,4 @@ export interface IParsedLocalFile {
   EXTRA_FIELD_LENGTH: number
 }
 
-export interface ILocalFileByteMap extends IParsedLocalFile {
-  SIZE: number,
-  SIGNATURE: number
-}
+export interface ILocalFileByteMap extends IParsedLocalFile, BaseByteMap {}

@@ -1,3 +1,5 @@
+import { BaseByteMap } from './BaseByteMap';
+
 export interface IParsedEndOfCentralDir {
   NUMBER_OF_ENTRIES: number,
   TOTAL_NUMBER_OF_ENTRIES: number,
@@ -6,7 +8,4 @@ export interface IParsedEndOfCentralDir {
   COMMENT_LENGTH: number
 }
 
-export interface IEndOfCentralDirByteMap extends IParsedEndOfCentralDir {
-  SIZE: number,
-  SIGNATURE: number
-}
+export interface IEndOfCentralDirByteMap extends IParsedEndOfCentralDir, BaseByteMap {}
