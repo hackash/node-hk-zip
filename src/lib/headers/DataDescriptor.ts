@@ -1,4 +1,4 @@
-import { IDataDescriptorByteMap, IParsedDataDescriptor } from '../interfaces/DataDescriptorByteMapType';
+import { IDataDescriptorByteMap, IParsedDataDescriptor } from '../interfaces/DataDescriptorByteMap';
 import { InvalidDataDescriptorHeaderError } from '../errors/InvalidDataDescriptorHeaderError';
 import { DATA_DESCRIPTOR_MAP } from '../ZipByteMap';
 import { HeaderMap } from './HeaderMap';

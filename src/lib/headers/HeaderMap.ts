@@ -1,12 +1,12 @@
-import { BaseByteMap } from '../interfaces/BaseByteMap';
+import { IBaseByteMap } from '../interfaces/BaseByteMap';
 
-export class HeaderMap<T extends BaseByteMap> {
+export class HeaderMap<T extends IBaseByteMap> {
   protected readonly data: Buffer;
   protected readonly map: T;
 
   constructor(map: T, input: Buffer, offset) {
-    this.data = input.slice(offset, offset + this.map.SIZE);
     this.map = map;
+    this.data = input.slice(offset, offset + this.map.SIZE);
   }
 
   protected isValidHeaderData(): boolean {

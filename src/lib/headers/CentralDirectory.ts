@@ -1,4 +1,4 @@
-import { ICentralDirByteMap, IParsedCentralDir } from '../interfaces/CentralDirByteMapType';
+import { ICentralDirByteMap, IParsedCentralDir } from '../interfaces/CentralDirByteMap';
 import { InvalidCentralDirHeaderError } from '../errors/InvalidCentralDirHeaderError';
 import { CENTRAL_DIR_MAP } from '../ZipByteMap';
 import { HeaderMap } from './HeaderMap';

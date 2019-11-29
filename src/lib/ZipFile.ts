@@ -1,8 +1,10 @@
 import { EndOfCentralDirectory } from './headers/EndOfCentralDirectory';
+import { InvalidZipFormatError } from './errors/InvalidZipFormatError';
 import { END_OF_CENTRAL_DIR_MAP } from './ZipByteMap';
+import { IZipFile } from './interfaces/ZipFile';
 import { ZipEntry } from './ZipEntry';
 
-export class ZipFile {
+export class ZipFile implements IZipFile {
 
   private EOCDH: EndOfCentralDirectory;
   private readonly data: Buffer;
@@ -28,7 +30,7 @@ export class ZipFile {
   public listEntries(): Array<ZipEntry> {
     const offset = this.findCentralDirOffset();
     if (offset === -1) {
-      throw new Error('Invalid format');
+      throw new InvalidZipFormatError();
     }
     this.EOCDH = new EndOfCentralDirectory(this.data, offset);
     let index = this.EOCDH.getOffset();

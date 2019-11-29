@@ -1,4 +1,4 @@
-export interface BaseByteMap {
+export interface IBaseByteMap {
   SIZE: number,
   SIGNATURE: number
 }

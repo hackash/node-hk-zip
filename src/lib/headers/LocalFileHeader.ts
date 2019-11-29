@@ -1,4 +1,4 @@
-import { IParsedLocalFile, ILocalFileByteMap } from '../interfaces/LocalFileByteMapType';
+import { IParsedLocalFile, ILocalFileByteMap } from '../interfaces/LocalFileByteMap';
 import { InvalidLocalFileHeaderError } from '../errors/InvalidLocalFileHeaderError';
 import { LOCAL_FILE_HEADER_MAP } from '../ZipByteMap';
 import { HeaderMap } from './HeaderMap';

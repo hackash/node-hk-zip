@@ -1,7 +1,7 @@
-import { IDataDescriptorByteMap } from './interfaces/DataDescriptorByteMapType';
+import { IDataDescriptorByteMap } from './interfaces/DataDescriptorByteMap';
 import { IEndOfCentralDirByteMap } from './interfaces/EndOfCentralDirByteMap';
-import { ICentralDirByteMap } from './interfaces/CentralDirByteMapType';
-import { ILocalFileByteMap } from './interfaces/LocalFileByteMapType';
+import { ICentralDirByteMap } from './interfaces/CentralDirByteMap';
+import { ILocalFileByteMap } from './interfaces/LocalFileByteMap';
 
 export const LOCAL_FILE_HEADER_MAP: ILocalFileByteMap = {
   SIZE: 30, // Local file header size
