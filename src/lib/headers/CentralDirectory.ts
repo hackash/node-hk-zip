@@ -1,4 +1,5 @@
 import { ICentralDirByteMap, IParsedCentralDir } from '../interfaces/CentralDirByteMapType';
+import { InvalidCentralDirHeaderError } from '../errors/InvalidCentralDirHeaderError';
 import { CENTRAL_DIR_MAP } from '../ZipByteMap';
 import { HeaderMap } from './HeaderMap';
 
@@ -12,7 +13,7 @@ export class CentralDirectory extends HeaderMap<ICentralDirByteMap> {
 
   private loadBinaryHeader(): IParsedCentralDir {
     if (!this.isValidHeaderData()) {
-      throw new Error('Wrong local file header');
+      throw new InvalidCentralDirHeaderError();
     }
     return {
       VERSION_MADE: this.data.readUInt16LE(this.map.VERSION_MADE),

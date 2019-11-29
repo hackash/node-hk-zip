@@ -1,4 +1,5 @@
 import { IEndOfCentralDirByteMap, IParsedEndOfCentralDir } from '../interfaces/EndOfCentralDirByteMap';
+import { InvalidEndOfCentralDirHeaderError } from '../errors/InvalidEndOfCentralDirHeaderError';
 import { END_OF_CENTRAL_DIR_MAP } from '../ZipByteMap';
 import { HeaderMap } from './HeaderMap';
 
@@ -12,7 +13,7 @@ export class EndOfCentralDirectory extends HeaderMap<IEndOfCentralDirByteMap> {
 
   public loadBinaryHeader(): IParsedEndOfCentralDir {
     if (!this.isValidHeaderData()) {
-      throw new Error('Wrong End Of central dir header');
+      throw new InvalidEndOfCentralDirHeaderError();
     }
     return {
       NUMBER_OF_ENTRIES: this.data.readUInt16LE(this.map.NUMBER_OF_ENTRIES),

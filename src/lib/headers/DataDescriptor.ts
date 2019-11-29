@@ -1,4 +1,5 @@
 import { IDataDescriptorByteMap, IParsedDataDescriptor } from '../interfaces/DataDescriptorByteMapType';
+import { InvalidDataDescriptorHeaderError } from '../errors/InvalidDataDescriptorHeaderError';
 import { DATA_DESCRIPTOR_MAP } from '../ZipByteMap';
 import { HeaderMap } from './HeaderMap';
 
@@ -12,7 +13,7 @@ export class DataDescriptor extends HeaderMap<IDataDescriptorByteMap> {
 
   private loadBinaryHeader(): IParsedDataDescriptor {
     if (!this.isValidHeaderData()) {
-      throw new Error('Wrong data descriptor');
+      throw new InvalidDataDescriptorHeaderError();
     }
     return {
       CRC: this.data.readUInt32LE(this.map.CRC),

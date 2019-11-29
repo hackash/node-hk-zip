@@ -1,4 +1,5 @@
 import { IParsedLocalFile, ILocalFileByteMap } from '../interfaces/LocalFileByteMapType';
+import { InvalidLocalFileHeaderError } from '../errors/InvalidLocalFileHeaderError';
 import { LOCAL_FILE_HEADER_MAP } from '../ZipByteMap';
 import { HeaderMap } from './HeaderMap';
 
@@ -16,7 +17,7 @@ export class LocalFileHeader extends HeaderMap<ILocalFileByteMap> {
 
   public loadBinaryHeader(): IParsedLocalFile {
     if (!this.isValidHeaderData()) {
-      throw new Error('Wrong data descriptor');
+      throw new InvalidLocalFileHeaderError();
     }
     return {
       VERSION: this.data.readUInt16LE(this.map.VERSION),
