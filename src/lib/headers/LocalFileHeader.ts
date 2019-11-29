@@ -7,7 +7,7 @@ export class LocalFileHeader extends HeaderMap<ILocalFileByteMap> {
   private parsed: IParsedLocalFile;
 
   constructor(input: Buffer, offset: number) {
-    super(LOCAL_FILE_HEADER_MAP, input.slice(offset, offset + LOCAL_FILE_HEADER_MAP.SIZE));
+    super(LOCAL_FILE_HEADER_MAP, input, offset);
     this.parsed = this.loadBinaryHeader();
   }
 

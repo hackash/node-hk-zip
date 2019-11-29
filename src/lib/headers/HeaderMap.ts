@@ -4,9 +4,9 @@ export class HeaderMap<T extends BaseByteMap> {
   protected readonly data: Buffer;
   protected readonly map: T;
 
-  constructor(map: T, data: Buffer) {
+  constructor(map: T, input: Buffer, offset) {
+    this.data = input.slice(offset, offset + this.map.SIZE);
     this.map = map;
-    this.data = data;
   }
 
   protected isValidHeaderData(): boolean {

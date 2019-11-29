@@ -7,7 +7,7 @@ export class DataDescriptor extends HeaderMap<IDataDescriptorByteMap> {
   private parsed: IParsedDataDescriptor;
 
   constructor(input: Buffer, offset: number) {
-    super(DATA_DESCRIPTOR_MAP, input.slice(offset, offset + DATA_DESCRIPTOR_MAP.SIZE));
+    super(DATA_DESCRIPTOR_MAP, input, offset);
     this.parsed = this.loadBinaryHeader();
   }
 

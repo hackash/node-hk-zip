@@ -7,7 +7,7 @@ export class CentralDirectory extends HeaderMap<ICentralDirByteMap> {
   private parsed: IParsedCentralDir;
 
   constructor(input: Buffer, offset: number) {
-    super(CENTRAL_DIR_MAP, input.slice(offset, offset + CENTRAL_DIR_MAP.SIZE));
+    super(CENTRAL_DIR_MAP, input, offset);
     this.parsed = this.loadBinaryHeader();
   }
 

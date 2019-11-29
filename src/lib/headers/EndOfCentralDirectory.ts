@@ -7,7 +7,7 @@ export class EndOfCentralDirectory extends HeaderMap<IEndOfCentralDirByteMap> {
   private parsed: IParsedEndOfCentralDir;
 
   constructor(input: Buffer, offset: number) {
-    super(END_OF_CENTRAL_DIR_MAP, input.slice(offset, offset + END_OF_CENTRAL_DIR_MAP.SIZE));
+    super(END_OF_CENTRAL_DIR_MAP, input, offset);
     this.parsed = this.loadBinaryHeader();
   }
 
