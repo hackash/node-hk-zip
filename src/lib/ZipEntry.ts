@@ -70,7 +70,7 @@ export class ZipEntry implements IZipEntry {
       case this.methods.DEFLATED:
         if (!this.isDirectory()) {
           const inflate = new MethodInflate(compressed);
-          return await inflate.decompress();
+          return inflate.decompress();
         }
         break;
       case this.methods.STORED:

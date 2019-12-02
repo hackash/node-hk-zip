@@ -12,5 +12,6 @@ entries.forEach(async (e: ZipEntry) => {
   // const data = await e.getData();
   // console.log('data', data);
   //await e.getData();
-  console.log('describe', e.describe());
+  const data =  await e.decompress();
+  console.log('describe',data.toString());
 });

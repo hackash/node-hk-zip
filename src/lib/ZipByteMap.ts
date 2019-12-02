@@ -1,5 +1,5 @@
-import { IDataDescriptorByteMap } from './interfaces/DataDescriptorByteMap';
 import { IEndOfCentralDirByteMap } from './interfaces/EndOfCentralDirByteMap';
+import { IDataDescriptorByteMap } from './interfaces/DataDescriptorByteMap';
 import { ICentralDirByteMap } from './interfaces/CentralDirByteMap';
 import { ILocalFileByteMap } from './interfaces/LocalFileByteMap';
 

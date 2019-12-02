@@ -19,7 +19,8 @@ export class ZipFile implements IZipFile {
     let end = -1;
     for (i; i >= n; i--) {
       if (this.data[i] !== 0x50) continue;
-      if (this.data.readUInt32LE(i) === END_OF_CENTRAL_DIR_MAP.SIGNATURE) {
+      const signature = this.data.readUInt32LE(i);
+      if (signature === END_OF_CENTRAL_DIR_MAP.SIGNATURE) {
         end = i;
         break;
       }
