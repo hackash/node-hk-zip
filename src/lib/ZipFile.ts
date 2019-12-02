@@ -1,19 +1,36 @@
+/**
+ *  @fileOverview Definition of ZipFile class
+ */
+
 import { EndOfCentralDirectory } from './headers/EndOfCentralDirectory';
 import { InvalidZipFormatError } from './errors/InvalidZipFormatError';
 import { END_OF_CENTRAL_DIR_MAP } from './ZipByteMap';
 import { IZipFile } from './interfaces/ZipFile';
 import { ZipEntry } from './ZipEntry';
 
+/**
+ * Class representing a ZipFile
+ * @implements IZipFile
+ */
 export class ZipFile implements IZipFile {
 
   private EOCDH: EndOfCentralDirectory;
   private readonly data: Buffer;
 
+  /**
+   * Creates a Zip File
+   * @param {Buffer} data - Zip binary data
+   * @return {ZipFile} - ZipFile object
+   */
   constructor(data: Buffer) {
     this.data = data;
   }
 
-  private findCentralDirOffset(): number {
+  /**
+   * Finds End of Central Directory offset
+   * @return {number} offset - Offset of EndOfCentralDirectory header
+   */
+  private findEndOfCentralDirOffset(): number {
     let i = this.data.length - END_OF_CENTRAL_DIR_MAP.SIZE;
     let n = Math.max(0, i - 0XFFF);
     let end = -1;
@@ -28,8 +45,13 @@ export class ZipFile implements IZipFile {
     return end;
   }
 
+  /**
+   * Lists all entries in the ZIP file if param paths is empty, otherwise filters the list by given paths
+   * @param {Array<string>} paths - List of paths to search
+   * @return {Array<ZipEntry>} list - The list of entries found
+   */
   private listEntries(paths: Array<string> = []): Array<ZipEntry> {
-    const offset = this.findCentralDirOffset();
+    const offset = this.findEndOfCentralDirOffset();
     if (offset === -1) {
       throw new InvalidZipFormatError();
     }
@@ -52,10 +74,19 @@ export class ZipFile implements IZipFile {
     return list;
   }
 
+  /**
+   * Searches a ZIP entry by given path
+   * @param {Array<string>} paths - List of paths to search
+   * @return {Array<ZipEntry>} list - The list of entries found
+   */
   public findEntries(paths: Array<string>): Array<ZipEntry> {
     return this.listEntries(paths);
   }
 
+  /**
+   * Lists all entries in the ZIP file
+   * @return {Array<ZipEntry>} list - The list of entries
+   */
   public listAllEntries(): Array<ZipEntry> {
     return this.listEntries();
   }

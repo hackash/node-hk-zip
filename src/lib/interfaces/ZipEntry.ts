@@ -1,6 +1,13 @@
-import { ZipEntry } from '../ZipEntry';
-import { ZipEntryDescription } from './ZipEntryDescription';
+/**
+ *  @fileOverview Definition of IZipEntry interface
+ */
 
+import { ZipEntryDescription } from './ZipEntryDescription';
+import { ZipEntry } from '../ZipEntry';
+
+/**
+ * @interface IZipEntry - Specifies public methods of ZipEntry class
+ */
 export interface IZipEntry {
   setCentralDirOffset(offset: number): ZipEntry;
 

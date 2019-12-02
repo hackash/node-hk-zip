@@ -1,5 +1,12 @@
+/**
+ *  @fileOverview Definition of IParsedCentralDir and ICentralDirByteMap interfaces
+ */
+
 import { IBaseByteMap } from './BaseByteMap';
 
+/**
+ * @interface IParsedCentralDir - Specifies Fields for ParsedCentralDir
+ */
 export interface IParsedCentralDir {
   VERSION_MADE: number,
   VERSION_EXTRACT: number,
@@ -19,4 +26,7 @@ export interface IParsedCentralDir {
   OFFSET: number
 }
 
+/**
+ * @interface ICentralDirByteMap - Specifies Fields for CentralDirByteMap
+ */
 export interface ICentralDirByteMap extends IParsedCentralDir, IBaseByteMap {}

@@ -1,8 +1,18 @@
+/**
+ *  @fileOverview Definition ZIP file bit/byte order
+ */
+
 import { IEndOfCentralDirByteMap } from './interfaces/EndOfCentralDirByteMap';
 import { IDataDescriptorByteMap } from './interfaces/DataDescriptorByteMap';
 import { ICentralDirByteMap } from './interfaces/CentralDirByteMap';
 import { ILocalFileByteMap } from './interfaces/LocalFileByteMap';
 
+/**
+ * LocalFileHeader byte/bit map
+ * @constant
+ *
+ * @type {ILocalFileByteMap}
+ */
 export const LOCAL_FILE_HEADER_MAP: ILocalFileByteMap = {
   SIZE: 30, // Local file header size
   SIGNATURE: 0x04034b50, // Local file header signature
@@ -18,6 +28,12 @@ export const LOCAL_FILE_HEADER_MAP: ILocalFileByteMap = {
   EXTRA_FIELD_LENGTH: 28 // Extra field length
 };
 
+/**
+ * DataDescriptorHeader byte/bit map
+ * @constant
+ *
+ * @type {IDataDescriptorByteMap}
+ */
 export const DATA_DESCRIPTOR_MAP: IDataDescriptorByteMap = {
   SIZE: 16, // Extended Local file header size
   SIGNATURE: 0x08074b50, // Extended Local file header signature (0x08074b50)
@@ -26,6 +42,12 @@ export const DATA_DESCRIPTOR_MAP: IDataDescriptorByteMap = {
   UNCOMPRESSED_SIZE: 12 // Uncompressed size
 };
 
+/**
+ * CentralDirectoryHeader byte/bit map
+ * @constant
+ *
+ * @type {ICentralDirByteMap}
+ */
 export const CENTRAL_DIR_MAP: ICentralDirByteMap = {
   SIZE: 46, // Central dir header size
   SIGNATURE: 0x02014b50, // Central file header signature
@@ -47,6 +69,12 @@ export const CENTRAL_DIR_MAP: ICentralDirByteMap = {
   OFFSET: 42 // Relative offset of local header
 };
 
+/**
+ * EndOfCentralDirectoryHeader byte/bit map
+ * @constant
+ *
+ * @type {IEndOfCentralDirByteMap}
+ */
 export const END_OF_CENTRAL_DIR_MAP: IEndOfCentralDirByteMap = {
   SIZE: 22, // End of central dir header size
   SIGNATURE: 0x06054b50, // End of central dir signature

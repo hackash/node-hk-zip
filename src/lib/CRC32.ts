@@ -1,4 +1,15 @@
+/**
+ *  @fileOverview Definition of CRC32 class
+ */
+
+/**
+ * Class representing a CRC32
+ */
 export default class CRC32 {
+  /**
+   * Creates CRC-32 table for checksum verification
+   * @return {Array<number>} table - CRC-32 table
+   */
   private static createCRCTable(): Array<number> {
     let c;
     let table = [];
@@ -12,6 +23,11 @@ export default class CRC32 {
     return table;
   }
 
+  /**
+   * Creates CRC-32 table for checksum verification
+   * (NOTE: this method is incomplete, TODO fix this to return proper CRC-32)
+   * @return {number} crc - Calculated CRC-32 value
+   */
   public static calculate(input: Buffer): number {
     const table = CRC32.createCRCTable();
     const buffer = Buffer.alloc(4);

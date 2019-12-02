@@ -1,5 +1,12 @@
+/**
+ *  @fileOverview Definition of IParsedLocalFile and ILocalFileByteMap interfaces
+ */
+
 import { IBaseByteMap } from './BaseByteMap';
 
+/**
+ * @interface IParsedLocalFile - Specifies Fields for ParsedLocalFileHeader
+ */
 export interface IParsedLocalFile {
   COMPRESSION_METHOD: number,
   VERSION: number,
@@ -13,4 +20,7 @@ export interface IParsedLocalFile {
   EXTRA_FIELD_LENGTH: number
 }
 
+/**
+ * @interface ILocalFileByteMap - Specifies Fields for LocalFileByteMap
+ */
 export interface ILocalFileByteMap extends IParsedLocalFile, IBaseByteMap {}
