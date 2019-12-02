@@ -1,5 +1,6 @@
 import { ZipEntry } from '../ZipEntry';
 
 export interface IZipFile {
-  listEntries(): Array<ZipEntry>;
+  listAllEntries(): Array<ZipEntry>;
+  findEntries(paths: Array<string>): Array<ZipEntry>;
 }

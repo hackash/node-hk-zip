@@ -1,7 +1,10 @@
 import { ZipEntry } from '../ZipEntry';
+import { ZipEntryDescription } from './ZipEntryDescription';
 
 export interface IZipEntry {
   setCentralDirOffset(offset: number): ZipEntry;
+
+  describe(): ZipEntryDescription;
 
   decompress(): Promise<Buffer>;
 
@@ -9,5 +12,7 @@ export interface IZipEntry {
 
   isDirectory(): boolean;
 
-  describe(): any;
+  getName(): string;
+
+  getPath(): string;
 }

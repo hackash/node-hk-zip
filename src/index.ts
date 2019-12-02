@@ -3,15 +3,17 @@ import { ZipEntry } from './lib/ZipEntry';
 
 const fs = require('fs');
 
-const buffer = fs.readFileSync('./assets/test-zip.zip');
+const buffer = fs.readFileSync('./assets/app-debug.apk');
 
 const zip = new ZipFile(buffer);
-const entries = zip.listEntries();
+const entries = zip.findEntries(['res/mipmap-hdpi-v4/icon.png']);
 
 entries.forEach(async (e: ZipEntry) => {
-  // const data = await e.getData();
-  // console.log('data', data);
-  //await e.getData();
-  const data =  await e.decompress();
-  console.log('describe',data.toString());
+  if (!e.isDirectory()) {
+    const data = await e.decompress();
+    console.log('e.getName', e.getName());
+    fs.writeFile(e.getName(), data, () => {
+      console.log('done');
+    });
+  }
 });

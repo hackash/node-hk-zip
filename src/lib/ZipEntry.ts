@@ -1,6 +1,7 @@
 import path from 'path';
 
 import { UnsupportedCompressionError } from './errors/UnsupportedCompressionError';
+import { ZipEntryDescription } from './interfaces/ZipEntryDescription';
 import { InvalidCRC32Error } from './errors/InvalidCRC32Error';
 import { CentralDirectory } from './headers/CentralDirectory';
 import { LocalFileHeader } from './headers/LocalFileHeader';
@@ -35,8 +36,8 @@ export class ZipEntry implements IZipEntry {
       /* TODO calculate and compare CRC */
       // CRC32.calculate(data) === this.LFH.getCRC32();
     } else {
-      const DDH = new DataDescriptor(this.data, ext);
-      console.log('DDH', DDH);
+      new DataDescriptor(this.data, ext);
+      // console.log('DDH', DDH);
       /* TODO calculate and compare CRC */
       // CRC32.calculate(data) === this.DDH.getCRC32();
     }
@@ -94,11 +95,18 @@ export class ZipEntry implements IZipEntry {
     return last === 47 || last === 92;
   }
 
-  public describe(): any {
+  public getName(): string {
+    return path.basename(this.name.toString())
+  }
+
+  public getPath(): string {
+    return this.name.toString()
+  }
+
+  public describe(): ZipEntryDescription {
     return {
       path: this.name.toString(),
       isDirectory: this.isDirectory(),
-      size: this.data.length,
       name: path.basename(this.name.toString())
     };
   }

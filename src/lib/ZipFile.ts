@@ -28,7 +28,7 @@ export class ZipFile implements IZipFile {
     return end;
   }
 
-  public listEntries(): Array<ZipEntry> {
+  private listEntries(paths: Array<string> = []): Array<ZipEntry> {
     const offset = this.findCentralDirOffset();
     if (offset === -1) {
       throw new InvalidZipFormatError();
@@ -39,9 +39,24 @@ export class ZipFile implements IZipFile {
     const list = [];
     for (let i = 0; i < count; i++) {
       const entry = new ZipEntry(this.data).setCentralDirOffset(index);
-      index += entry.getLocalHeaderSize();
+      if (paths.length > 0) {
+        if (paths.includes(entry.getPath())) {
+          list.push(entry);
+        }
+        index += entry.getLocalHeaderSize();
+        continue;
+      }
       list.push(entry);
+      index += entry.getLocalHeaderSize();
     }
     return list;
+  }
+
+  public findEntries(paths: Array<string>): Array<ZipEntry> {
+    return this.listEntries(paths);
+  }
+
+  public listAllEntries(): Array<ZipEntry> {
+    return this.listEntries();
   }
 }
