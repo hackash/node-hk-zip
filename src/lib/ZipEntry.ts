@@ -132,7 +132,8 @@ export class ZipEntry implements IZipEntry {
       /* TODO calculate and compare CRC */
       // CRC32.calculate(data) === this.LFH.getCRC32();
     } else {
-      new DataDescriptor(this.data, ext);
+      const DDH = new DataDescriptor(this.data, ext);
+      DDH.getCRC32();
       // console.log('DDH', DDH);
       /* TODO calculate and compare CRC */
       // CRC32.calculate(data) === this.DDH.getCRC32();
