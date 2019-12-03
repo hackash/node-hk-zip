@@ -18,7 +18,7 @@ export class HeaderMap<T extends IBaseByteMap> {
    * @param {number} offset - Offset of the header
    * @return {HeaderMap<IBaseByteMap>} - HeaderMap object
    */
-  constructor(map: T, input: Buffer, offset) {
+  constructor(map: T, input: Buffer, offset: number) {
     this.map = map;
     this.data = input.slice(offset, offset + this.map.SIZE);
   }
