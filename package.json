@@ -1,11 +1,11 @@
 {
   "name": "unzipper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "unizp implementation for NodeJS",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
   "module": "build/module/index.js",
-  "repository": "https://github.com/hackash/oauth2-server",
+  "repository": "https://github.com/hackash/node-hk-zip",
   "license": "MIT",
   "keywords": [],
   "scripts": {
@@ -33,7 +33,7 @@
     "clean": "trash build test",
     "all": "run-s reset test cov:check doc:html",
     "prepare-release": "run-s all version doc:publish",
-    "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('oauth2-server must be installed with Yarn: https://yarnpkg.com/')\""
+    "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('node-hk-zip must be installed with Yarn: https://yarnpkg.com/')\""
   },
   "scripts-info": {
     "info": "Display information about the package scripts",
