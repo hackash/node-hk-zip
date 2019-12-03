@@ -2,10 +2,10 @@
  *  @fileOverview Definition of ZipFile class
  */
 
-import { EndOfCentralDirectory } from './headers/EndOfCentralDirectory';
 import { InvalidZipFormatError } from './errors/InvalidZipFormatError';
-import { END_OF_CENTRAL_DIR_MAP } from './ZipByteMap';
+import { EndOfCentralDirectory } from './headers/EndOfCentralDirectory';
 import { IZipFile } from './interfaces/ZipFile';
+import { END_OF_CENTRAL_DIR_MAP } from './ZipByteMap';
 import { ZipEntry } from './ZipEntry';
 
 /**

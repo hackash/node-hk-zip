@@ -2,8 +2,8 @@
  *  @fileOverview Definition of CentralDirectory class
  */
 
-import { ICentralDirByteMap, IParsedCentralDir } from '../interfaces/CentralDirByteMap';
 import { InvalidCentralDirHeaderError } from '../errors/InvalidCentralDirHeaderError';
+import { ICentralDirByteMap, IParsedCentralDir } from '../interfaces/CentralDirByteMap';
 import { CENTRAL_DIR_MAP } from '../ZipByteMap';
 import { HeaderMap } from './HeaderMap';
 
@@ -23,34 +23,6 @@ export class CentralDirectory extends HeaderMap<ICentralDirByteMap> {
   constructor(input: Buffer, offset: number) {
     super(CENTRAL_DIR_MAP, input, offset);
     this.parsed = this.loadBinaryHeader();
-  }
-
-  /**
-   * Parses central directory header using ByteMap
-   * @return {IParsedDataDescriptor} - IParsedCentralDir object
-   */
-  private loadBinaryHeader(): IParsedCentralDir {
-    if (!this.isValidHeaderData()) {
-      throw new InvalidCentralDirHeaderError();
-    }
-    return {
-      VERSION_MADE: this.data.readUInt16LE(this.map.VERSION_MADE),
-      VERSION_EXTRACT: this.data.readUInt16LE(this.map.VERSION_EXTRACT),
-      FLAGS: this.data.readUInt16LE(this.map.FLAGS),
-      METHOD: this.data.readUInt16LE(this.map.METHOD),
-      TIME: this.data.readUInt16LE(this.map.TIME),
-      DATE: this.data.readUInt16LE(this.map.DATE),
-      CRC: this.data.readUInt32LE(this.map.CRC),
-      COMPRESSED_SIZE: this.data.readUInt32LE(this.map.COMPRESSED_SIZE),
-      DECOMPRESSED_SIZE: this.data.readUInt32LE(this.map.DECOMPRESSED_SIZE),
-      FILENAME_LENGTH: this.data.readUInt16LE(this.map.FILENAME_LENGTH),
-      EXTRA_FIELD_LENGTH: this.data.readUInt16LE(this.map.EXTRA_FIELD_LENGTH),
-      COMMENT_LENGTH: this.data.readUInt16LE(this.map.COMMENT_LENGTH),
-      DISK_START: this.data.readUInt16LE(this.map.DISK_START),
-      INTERNAL_ATTRIBUTES: this.data.readUInt16LE(this.map.INTERNAL_ATTRIBUTES),
-      EXTERNAL_ATTRIBUTES: this.data.readUInt32LE(this.map.EXTERNAL_ATTRIBUTES),
-      OFFSET: this.data.readUInt32LE(this.map.OFFSET)
-    };
   }
 
   /**
@@ -107,5 +79,33 @@ export class CentralDirectory extends HeaderMap<ICentralDirByteMap> {
    */
   public getSize(): number {
     return this.map.SIZE;
+  }
+
+  /**
+   * Parses central directory header using ByteMap
+   * @return {IParsedDataDescriptor} - IParsedCentralDir object
+   */
+  private loadBinaryHeader(): IParsedCentralDir {
+    if (!this.isValidHeaderData()) {
+      throw new InvalidCentralDirHeaderError();
+    }
+    return {
+      FLAGS: this.data.readUInt16LE(this.map.FLAGS),
+      METHOD: this.data.readUInt16LE(this.map.METHOD),
+      TIME: this.data.readUInt16LE(this.map.TIME),
+      VERSION_EXTRACT: this.data.readUInt16LE(this.map.VERSION_EXTRACT),
+      VERSION_MADE: this.data.readUInt16LE(this.map.VERSION_MADE),
+      DATE: this.data.readUInt16LE(this.map.DATE),
+      CRC: this.data.readUInt32LE(this.map.CRC),
+      COMPRESSED_SIZE: this.data.readUInt32LE(this.map.COMPRESSED_SIZE),
+      DECOMPRESSED_SIZE: this.data.readUInt32LE(this.map.DECOMPRESSED_SIZE),
+      FILENAME_LENGTH: this.data.readUInt16LE(this.map.FILENAME_LENGTH),
+      EXTRA_FIELD_LENGTH: this.data.readUInt16LE(this.map.EXTRA_FIELD_LENGTH),
+      COMMENT_LENGTH: this.data.readUInt16LE(this.map.COMMENT_LENGTH),
+      DISK_START: this.data.readUInt16LE(this.map.DISK_START),
+      INTERNAL_ATTRIBUTES: this.data.readUInt16LE(this.map.INTERNAL_ATTRIBUTES),
+      EXTERNAL_ATTRIBUTES: this.data.readUInt32LE(this.map.EXTERNAL_ATTRIBUTES),
+      OFFSET: this.data.readUInt32LE(this.map.OFFSET)
+    };
   }
 }

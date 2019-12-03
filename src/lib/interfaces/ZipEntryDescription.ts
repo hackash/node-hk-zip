@@ -4,9 +4,9 @@
 
 
 /**
- * @interface ZipEntryDescription - Specifies fields for method describe in ZipEntry class
+ * @interface IZipEntryDescription - Specifies fields for method describe in ZipEntry class
  */
-export interface ZipEntryDescription {
+export interface IZipEntryDescription {
   isDirectory: boolean;
   name: string;
   path: string;

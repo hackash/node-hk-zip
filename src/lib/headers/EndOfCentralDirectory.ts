@@ -2,8 +2,8 @@
  *  @fileOverview Definition of EndOfCentralDirectory class
  */
 
-import { IEndOfCentralDirByteMap, IParsedEndOfCentralDir } from '../interfaces/EndOfCentralDirByteMap';
 import { InvalidEndOfCentralDirHeaderError } from '../errors/InvalidEndOfCentralDirHeaderError';
+import { IEndOfCentralDirByteMap, IParsedEndOfCentralDir } from '../interfaces/EndOfCentralDirByteMap';
 import { END_OF_CENTRAL_DIR_MAP } from '../ZipByteMap';
 import { HeaderMap } from './HeaderMap';
 

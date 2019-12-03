@@ -1,3 +1,4 @@
+// tslint:disable-next-line:no-implicit-dependencies
 import test from 'ava';
 import fs from 'fs';
 
@@ -12,17 +13,20 @@ test.beforeEach(t => {
 });
 
 test('List all entries (MAC OSX)', (t, count: number) => {
+  // tslint:disable-next-line:no-string-literal
   const entries = t.context['zip'].listAllEntries();
   t.is(entries.length, count);
 }, 5);
 
 test('Look for existing entry in ZIP file', (t, filename: string) => {
-  const texts: Array<ZipEntry> = t.context['zip'].findEntries([filename]);
-  t.is(texts.length, 1);
-  t.is(texts[0].getName(), filename);
+  // tslint:disable-next-line:no-string-literal
+  const entries: ZipEntry[] = t.context['zip'].findEntries([filename]);
+  t.is(entries.length, 1);
+  t.is(entries[0].getName(), filename);
 }, 'test.txt');
 
 test('Look for nonexistent entry in ZIP file', (t, filename: string) => {
-  const entries: Array<ZipEntry> = t.context['zip'].findEntries([filename]);
+  // tslint:disable-next-line:no-string-literal
+  const entries: ZipEntry[] = t.context['zip'].findEntries([filename]);
   t.is(entries.length, 0);
 }, 'does-not-exist.txt');

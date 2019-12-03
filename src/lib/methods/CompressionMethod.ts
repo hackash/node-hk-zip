@@ -20,5 +20,5 @@ export abstract class CompressionMethod {
    * Decompresses the data, based on compression method
    * @return {Promise<Buffer>} decompressed - Decompressed data
    */
-  abstract decompress(): Promise<Buffer>;
+  public abstract decompress(): Promise<Buffer>;
 }

@@ -2,14 +2,14 @@
  *  @fileOverview Definition of IZipEntry interface
  */
 
-import { ZipEntryDescription } from './ZipEntryDescription';
+import { IZipEntryDescription } from './ZipEntryDescription';
 
 /**
  * @interface IZipEntry - Specifies public methods of ZipEntry class
  */
 export interface IZipEntry {
 
-  describe(): ZipEntryDescription;
+  describe(): IZipEntryDescription;
 
   decompress(): Promise<Buffer>;
 

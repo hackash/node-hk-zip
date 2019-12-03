@@ -2,8 +2,8 @@
  *  @fileOverview Definition of DataDescriptor class
  */
 
-import { IDataDescriptorByteMap, IParsedDataDescriptor } from '../interfaces/DataDescriptorByteMap';
 import { InvalidDataDescriptorHeaderError } from '../errors/InvalidDataDescriptorHeaderError';
+import { IDataDescriptorByteMap, IParsedDataDescriptor } from '../interfaces/DataDescriptorByteMap';
 import { DATA_DESCRIPTOR_MAP } from '../ZipByteMap';
 import { HeaderMap } from './HeaderMap';
 
@@ -26,6 +26,14 @@ export class DataDescriptor extends HeaderMap<IDataDescriptorByteMap> {
   }
 
   /**
+   * Getter method for CRC-32
+   * @return {number} num - CRC value
+   */
+  public getCRC32(): number {
+    return this.parsed.CRC;
+  }
+
+  /**
    * Parses data descriptor header using ByteMap
    * @return {IParsedDataDescriptor} - IParsedDataDescriptor object
    */
@@ -38,13 +46,5 @@ export class DataDescriptor extends HeaderMap<IDataDescriptorByteMap> {
       COMPRESSED_SIZE: this.data.readUInt32LE(this.map.COMPRESSED_SIZE),
       UNCOMPRESSED_SIZE: this.data.readUInt32LE(this.map.UNCOMPRESSED_SIZE)
     };
-  }
-
-  /**
-   * Getter method for CRC-32
-   * @return {number} num - CRC value
-   */
-  public getCRC32(): number {
-    return this.parsed.CRC;
   }
 }

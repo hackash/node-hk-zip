@@ -8,6 +8,7 @@ import { ZipEntry } from '../ZipEntry';
  * @interface IZipFile - Specifies public methods of ZipFile class
  */
 export interface IZipFile {
-  listAllEntries(): Array<ZipEntry>;
-  findEntries(paths: Array<string>): Array<ZipEntry>;
+  listAllEntries(): ZipEntry[];
+
+  findEntries(paths: string[]): ZipEntry[];
 }

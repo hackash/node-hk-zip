@@ -4,16 +4,16 @@
 
 import path from 'path';
 
-import { UnsupportedCompressionError } from './errors/UnsupportedCompressionError';
-import { ZipEntryDescription } from './interfaces/ZipEntryDescription';
+import CRC32 from './CRC32';
 import { InvalidCRC32Error } from './errors/InvalidCRC32Error';
+import { UnsupportedCompressionError } from './errors/UnsupportedCompressionError';
 import { CentralDirectory } from './headers/CentralDirectory';
-import { LocalFileHeader } from './headers/LocalFileHeader';
 import { DataDescriptor } from './headers/DataDescriptor';
+import { LocalFileHeader } from './headers/LocalFileHeader';
+import { IZipEntry } from './interfaces/ZipEntry';
+import { IZipEntryDescription } from './interfaces/ZipEntryDescription';
 import { MethodInflate } from './methods/MethodInflate';
 import { MethodStored } from './methods/MethodStored';
-import { IZipEntry } from './interfaces/ZipEntry';
-import CRC32 from './CRC32';
 
 /**
  * Class representing a ZipEntry
@@ -40,62 +40,6 @@ export class ZipEntry implements IZipEntry {
   constructor(data: Buffer, centralDirOffset: number) {
     this.data = data;
     this.setCentralDirOffset(centralDirOffset);
-  }
-
-  /**
-   * Initiates name of the ZipEntry
-   * @param {number} offset - Name offset
-   */
-  private initName(offset: number): void {
-    this.name = this.data.slice(offset, offset + this.CDH.getFilenameLength());
-  }
-
-  /**
-   * Verifies CRC-32 checksum
-   * @param {Buffer} data - Compressed data
-   * @param {number} ext - DataDescriptor Header offset
-   * @return {boolean} isValidCRC32 - true when checksum matches, otherwise false
-   */
-  private verifyChecksum(data: Buffer, ext: number): boolean {
-    if ((this.CDH.getFlags() & 0x8) !== 0x8) {
-      /* TODO calculate and compare CRC */
-      // CRC32.calculate(data) === this.LFH.getCRC32();
-    } else {
-      new DataDescriptor(this.data, ext);
-      // console.log('DDH', DDH);
-      /* TODO calculate and compare CRC */
-      // CRC32.calculate(data) === this.DDH.getCRC32();
-    }
-    /* Mocking this now, TODO implement proper CRC calculation later */
-    return CRC32.calculate(data) === 0;
-  }
-
-  /**
-   * Sets CentralDirectory offset
-   * @param {number} offset - CentralDirectory Header offset
-   * @return {ZipEntry} Zip entry - class reference for chain call
-   */
-  private setCentralDirOffset(offset: number): ZipEntry {
-    this.CDH = new CentralDirectory(this.data, offset);
-    const fieldsOffset = this.CDH.getSize() + offset;
-    this.initName(fieldsOffset);
-    return this;
-  }
-
-  /**
-   * Fetches raw compressed data of the ZipEntry
-   * @return {Buffer} compressed - compressed data slice
-   */
-  private fetchRawCompressedData(): Buffer {
-    const offset = this.CDH.getLocalHeaderOffset();
-    this.LFH = new LocalFileHeader(this.data, offset);
-    const start = this.LFH.getCompressedSliceOffset(offset);
-    const end = this.CDH.getCompressedSize();
-    const compressed = this.data.slice(start, start + end);
-    if (this.verifyChecksum(compressed, start + end)) {
-      return compressed;
-    }
-    throw new InvalidCRC32Error();
   }
 
   /**
@@ -159,14 +103,70 @@ export class ZipEntry implements IZipEntry {
 
   /**
    * Describes entry without decompression
-   * @return {ZipEntryDescription} description - Description of ZipEntry without data
+   * @return {IZipEntryDescription} description - Description of ZipEntry without data
    */
-  public describe(): ZipEntryDescription {
+  public describe(): IZipEntryDescription {
     return {
-      path: this.name.toString(),
       isDirectory: this.isDirectory(),
-      name: path.basename(this.name.toString())
+      name: path.basename(this.name.toString()),
+      path: this.name.toString()
     };
+  }
+
+  /**
+   * Initiates name of the ZipEntry
+   * @param {number} offset - Name offset
+   */
+  private initName(offset: number): void {
+    this.name = this.data.slice(offset, offset + this.CDH.getFilenameLength());
+  }
+
+  /**
+   * Verifies CRC-32 checksum
+   * @param {Buffer} data - Compressed data
+   * @param {number} ext - DataDescriptor Header offset
+   * @return {boolean} isValidCRC32 - true when checksum matches, otherwise false
+   */
+  private verifyChecksum(data: Buffer, ext: number): boolean {
+    if ((this.CDH.getFlags() & 0x8) !== 0x8) {
+      /* TODO calculate and compare CRC */
+      // CRC32.calculate(data) === this.LFH.getCRC32();
+    } else {
+      new DataDescriptor(this.data, ext);
+      // console.log('DDH', DDH);
+      /* TODO calculate and compare CRC */
+      // CRC32.calculate(data) === this.DDH.getCRC32();
+    }
+    /* Mocking this now, TODO implement proper CRC calculation later */
+    return CRC32.calculate(data) === 0;
+  }
+
+  /**
+   * Sets CentralDirectory offset
+   * @param {number} offset - CentralDirectory Header offset
+   * @return {ZipEntry} Zip entry - class reference for chain call
+   */
+  private setCentralDirOffset(offset: number): ZipEntry {
+    this.CDH = new CentralDirectory(this.data, offset);
+    const fieldsOffset = this.CDH.getSize() + offset;
+    this.initName(fieldsOffset);
+    return this;
+  }
+
+  /**
+   * Fetches raw compressed data of the ZipEntry
+   * @return {Buffer} compressed - compressed data slice
+   */
+  private fetchRawCompressedData(): Buffer {
+    const offset = this.CDH.getLocalHeaderOffset();
+    this.LFH = new LocalFileHeader(this.data, offset);
+    const start = this.LFH.getCompressedSliceOffset(offset);
+    const end = this.CDH.getCompressedSize();
+    const compressed = this.data.slice(start, start + end);
+    if (this.verifyChecksum(compressed, start + end)) {
+      return compressed;
+    }
+    throw new InvalidCRC32Error();
   }
 
 }

@@ -2,8 +2,8 @@
  *  @fileOverview Definition of LocalFileHeader class
  */
 
-import { IParsedLocalFile, ILocalFileByteMap } from '../interfaces/LocalFileByteMap';
 import { InvalidLocalFileHeaderError } from '../errors/InvalidLocalFileHeaderError';
+import { ILocalFileByteMap, IParsedLocalFile } from '../interfaces/LocalFileByteMap';
 import { LOCAL_FILE_HEADER_MAP } from '../ZipByteMap';
 import { HeaderMap } from './HeaderMap';
 
