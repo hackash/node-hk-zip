@@ -12,21 +12,33 @@ test.beforeEach(t => {
   };
 });
 
-test('List all entries (MAC OSX)', (t, count: number) => {
-  // tslint:disable-next-line:no-string-literal
-  const entries = t.context['zip'].listAllEntries();
-  t.is(entries.length, count);
-}, 5);
+test(
+  'List all entries (MAC OSX)',
+  (t, count: number) => {
+    // tslint:disable-next-line:no-string-literal
+    const entries = t.context['zip'].listAllEntries();
+    t.is(entries.length, count);
+  },
+  5
+);
 
-test('Look for existing entry in ZIP file', (t, filename: string) => {
-  // tslint:disable-next-line:no-string-literal
-  const entries: ZipEntry[] = t.context['zip'].findEntries([filename]);
-  t.is(entries.length, 1);
-  t.is(entries[0].getName(), filename);
-}, 'test.txt');
+test(
+  'Look for existing entry in ZIP file',
+  (t, filename: string) => {
+    // tslint:disable-next-line:no-string-literal
+    const entries: ZipEntry[] = t.context['zip'].findEntries([filename]);
+    t.is(entries.length, 1);
+    t.is(entries[0].getName(), filename);
+  },
+  'test.txt'
+);
 
-test('Look for nonexistent entry in ZIP file', (t, filename: string) => {
-  // tslint:disable-next-line:no-string-literal
-  const entries: ZipEntry[] = t.context['zip'].findEntries([filename]);
-  t.is(entries.length, 0);
-}, 'does-not-exist.txt');
+test(
+  'Look for nonexistent entry in ZIP file',
+  (t, filename: string) => {
+    // tslint:disable-next-line:no-string-literal
+    const entries: ZipEntry[] = t.context['zip'].findEntries([filename]);
+    t.is(entries.length, 0);
+  },
+  'does-not-exist.txt'
+);

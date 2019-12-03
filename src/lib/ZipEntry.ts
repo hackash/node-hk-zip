@@ -169,5 +169,4 @@ export class ZipEntry implements IZipEntry {
     }
     throw new InvalidCRC32Error();
   }
-
 }

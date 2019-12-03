@@ -3,7 +3,10 @@
  */
 
 import { InvalidDataDescriptorHeaderError } from '../errors/InvalidDataDescriptorHeaderError';
-import { IDataDescriptorByteMap, IParsedDataDescriptor } from '../interfaces/DataDescriptorByteMap';
+import {
+  IDataDescriptorByteMap,
+  IParsedDataDescriptor
+} from '../interfaces/DataDescriptorByteMap';
 import { DATA_DESCRIPTOR_MAP } from '../ZipByteMap';
 import { HeaderMap } from './HeaderMap';
 

@@ -9,7 +9,6 @@ import { CompressionMethod } from './CompressionMethod';
  * @extends CompressionMethod
  */
 export class MethodStored extends CompressionMethod {
-
   /**
    * Wraps data into promise as there is no compression applied
    * @return {Promise<Buffer>} data - data

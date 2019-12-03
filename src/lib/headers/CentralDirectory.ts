@@ -3,7 +3,10 @@
  */
 
 import { InvalidCentralDirHeaderError } from '../errors/InvalidCentralDirHeaderError';
-import { ICentralDirByteMap, IParsedCentralDir } from '../interfaces/CentralDirByteMap';
+import {
+  ICentralDirByteMap,
+  IParsedCentralDir
+} from '../interfaces/CentralDirByteMap';
 import { CENTRAL_DIR_MAP } from '../ZipByteMap';
 import { HeaderMap } from './HeaderMap';
 
@@ -30,7 +33,11 @@ export class CentralDirectory extends HeaderMap<ICentralDirByteMap> {
    * @return {number} num - local file header size
    */
   public getLocalHeaderSize(): number {
-    return this.map.SIZE + this.parsed.FILENAME_LENGTH + this.parsed.EXTRA_FIELD_LENGTH;
+    return (
+      this.map.SIZE +
+      this.parsed.FILENAME_LENGTH +
+      this.parsed.EXTRA_FIELD_LENGTH
+    );
   }
 
   /**

@@ -29,6 +29,8 @@ export class HeaderMap<T extends IBaseByteMap> {
    */
   protected isValidHeaderData(): boolean {
     const signature = this.data.readUInt32LE(0);
-    return this.data.length === this.map.SIZE && signature === this.map.SIGNATURE;
+    return (
+      this.data.length === this.map.SIZE && signature === this.map.SIGNATURE
+    );
   }
 }

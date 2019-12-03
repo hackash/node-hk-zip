@@ -3,7 +3,10 @@
  */
 
 import { InvalidLocalFileHeaderError } from '../errors/InvalidLocalFileHeaderError';
-import { ILocalFileByteMap, IParsedLocalFile } from '../interfaces/LocalFileByteMap';
+import {
+  ILocalFileByteMap,
+  IParsedLocalFile
+} from '../interfaces/LocalFileByteMap';
 import { LOCAL_FILE_HEADER_MAP } from '../ZipByteMap';
 import { HeaderMap } from './HeaderMap';
 
@@ -31,7 +34,12 @@ export class LocalFileHeader extends HeaderMap<ILocalFileByteMap> {
    * @return {number} offset - Compressed data offset
    */
   public getCompressedSliceOffset(offset: number): number {
-    return offset + this.map.SIZE + this.parsed.FILENAME_LENGTH + this.parsed.EXTRA_FIELD_LENGTH;
+    return (
+      offset +
+      this.map.SIZE +
+      this.parsed.FILENAME_LENGTH +
+      this.parsed.EXTRA_FIELD_LENGTH
+    );
   }
 
   /**

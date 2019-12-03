@@ -13,7 +13,6 @@ import { ZipEntry } from './ZipEntry';
  * @implements IZipFile
  */
 export class ZipFile implements IZipFile {
-
   private EOCDH: EndOfCentralDirectory;
   private readonly data: Buffer;
   private readonly EOCDHoffset: number;
@@ -54,7 +53,7 @@ export class ZipFile implements IZipFile {
    */
   private findEndOfCentralDirOffset(): number {
     let i = this.data.length - END_OF_CENTRAL_DIR_MAP.SIZE;
-    const n = Math.max(0, i - 0XFFF);
+    const n = Math.max(0, i - 0xfff);
     let end = -1;
     for (i; i >= n; i--) {
       if (this.data[i] !== 0x50) {

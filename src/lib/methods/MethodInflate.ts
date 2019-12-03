@@ -11,7 +11,6 @@ import { CompressionMethod } from './CompressionMethod';
  * @extends CompressionMethod
  */
 export class MethodInflate extends CompressionMethod {
-
   /**
    * Decompresses the data, compressed by method deflate
    * @return {Promise<Buffer>} decompressed - Decompressed data
@@ -19,11 +18,11 @@ export class MethodInflate extends CompressionMethod {
   public decompress(): Promise<Buffer> {
     const inflate = zlb.createInflateRaw();
     return new Promise((resolve, reject) => {
-      inflate.on('data', (data) => {
+      inflate.on('data', data => {
         resolve(data);
       });
 
-      inflate.on('error', (e) => {
+      inflate.on('error', e => {
         reject(e);
       });
 

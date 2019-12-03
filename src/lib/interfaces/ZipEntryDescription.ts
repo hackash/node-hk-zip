@@ -2,7 +2,6 @@
  *  @fileOverview Definition of ZipEntryDescription interface
  */
 
-
 /**
  * @interface IZipEntryDescription - Specifies fields for method describe in ZipEntry class
  */

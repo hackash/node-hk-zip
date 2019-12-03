@@ -26,7 +26,7 @@ export default class CRC32 {
     // return buffer.readUInt32LE(0);
     /* TODO return calculated CRC */
     return 0;
-  };
+  }
 
   /**
    * Creates CRC-32 table for checksum verification
@@ -38,7 +38,7 @@ export default class CRC32 {
     for (let n = 0; n < 256; n++) {
       c = n;
       for (let k = 0; k < 8; k++) {
-        c = ((c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1));
+        c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
       }
       table[n] = c;
     }

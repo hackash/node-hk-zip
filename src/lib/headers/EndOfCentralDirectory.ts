@@ -3,7 +3,10 @@
  */
 
 import { InvalidEndOfCentralDirHeaderError } from '../errors/InvalidEndOfCentralDirHeaderError';
-import { IEndOfCentralDirByteMap, IParsedEndOfCentralDir } from '../interfaces/EndOfCentralDirByteMap';
+import {
+  IEndOfCentralDirByteMap,
+  IParsedEndOfCentralDir
+} from '../interfaces/EndOfCentralDirByteMap';
 import { END_OF_CENTRAL_DIR_MAP } from '../ZipByteMap';
 import { HeaderMap } from './HeaderMap';
 
@@ -35,7 +38,9 @@ export class EndOfCentralDirectory extends HeaderMap<IEndOfCentralDirByteMap> {
     }
     return {
       NUMBER_OF_ENTRIES: this.data.readUInt16LE(this.map.NUMBER_OF_ENTRIES),
-      TOTAL_NUMBER_OF_ENTRIES: this.data.readUInt16LE(this.map.TOTAL_NUMBER_OF_ENTRIES),
+      TOTAL_NUMBER_OF_ENTRIES: this.data.readUInt16LE(
+        this.map.TOTAL_NUMBER_OF_ENTRIES
+      ),
       CENTRAL_DIR_SIZE: this.data.readUInt32LE(this.map.CENTRAL_DIR_SIZE),
       CENTRAL_DIR_OFFSET: this.data.readUInt32LE(this.map.CENTRAL_DIR_OFFSET),
       COMMENT_LENGTH: this.data.readUInt16LE(this.map.COMMENT_LENGTH)
