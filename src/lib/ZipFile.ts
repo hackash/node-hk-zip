@@ -16,6 +16,7 @@ export class ZipFile implements IZipFile {
 
   private EOCDH: EndOfCentralDirectory;
   private readonly data: Buffer;
+  private readonly EOCDHoffset: number;
 
   /**
    * Creates a Zip File
@@ -24,6 +25,27 @@ export class ZipFile implements IZipFile {
    */
   constructor(data: Buffer) {
     this.data = data;
+    this.EOCDHoffset = this.findEndOfCentralDirOffset();
+    if (this.EOCDHoffset === -1) {
+      throw new InvalidZipFormatError();
+    }
+  }
+
+  /**
+   * Searches a ZIP entry by given path
+   * @param {Array<string>} paths - List of paths to search
+   * @return {Array<ZipEntry>} list - The list of entries found
+   */
+  public findEntries(paths: string[]): ZipEntry[] {
+    return this.listEntries(paths);
+  }
+
+  /**
+   * Lists all entries in the ZIP file
+   * @return {Array<ZipEntry>} list - The list of entries
+   */
+  public listAllEntries(): ZipEntry[] {
+    return this.listEntries();
   }
 
   /**
@@ -32,10 +54,12 @@ export class ZipFile implements IZipFile {
    */
   private findEndOfCentralDirOffset(): number {
     let i = this.data.length - END_OF_CENTRAL_DIR_MAP.SIZE;
-    let n = Math.max(0, i - 0XFFF);
+    const n = Math.max(0, i - 0XFFF);
     let end = -1;
     for (i; i >= n; i--) {
-      if (this.data[i] !== 0x50) continue;
+      if (this.data[i] !== 0x50) {
+        continue;
+      }
       const signature = this.data.readUInt32LE(i);
       if (signature === END_OF_CENTRAL_DIR_MAP.SIGNATURE) {
         end = i;
@@ -50,17 +74,13 @@ export class ZipFile implements IZipFile {
    * @param {Array<string>} paths - List of paths to search
    * @return {Array<ZipEntry>} list - The list of entries found
    */
-  private listEntries(paths: Array<string> = []): Array<ZipEntry> {
-    const offset = this.findEndOfCentralDirOffset();
-    if (offset === -1) {
-      throw new InvalidZipFormatError();
-    }
-    this.EOCDH = new EndOfCentralDirectory(this.data, offset);
+  private listEntries(paths: string[] = []): ZipEntry[] {
+    this.EOCDH = new EndOfCentralDirectory(this.data, this.EOCDHoffset);
     let index = this.EOCDH.getOffset();
-    let count = this.EOCDH.getNumberOfEntries();
+    const count = this.EOCDH.getNumberOfEntries();
     const list = [];
     for (let i = 0; i < count; i++) {
-      const entry = new ZipEntry(this.data).setCentralDirOffset(index);
+      const entry = new ZipEntry(this.data, index);
       if (paths.length > 0) {
         if (paths.includes(entry.getPath())) {
           list.push(entry);
@@ -72,22 +92,5 @@ export class ZipFile implements IZipFile {
       index += entry.getLocalHeaderSize();
     }
     return list;
-  }
-
-  /**
-   * Searches a ZIP entry by given path
-   * @param {Array<string>} paths - List of paths to search
-   * @return {Array<ZipEntry>} list - The list of entries found
-   */
-  public findEntries(paths: Array<string>): Array<ZipEntry> {
-    return this.listEntries(paths);
-  }
-
-  /**
-   * Lists all entries in the ZIP file
-   * @return {Array<ZipEntry>} list - The list of entries
-   */
-  public listAllEntries(): Array<ZipEntry> {
-    return this.listEntries();
   }
 }

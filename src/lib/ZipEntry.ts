@@ -34,10 +34,12 @@ export class ZipEntry implements IZipEntry {
   /**
    * Creates a Zip Entry
    * @param {Buffer} data - Zip binary data
+   * @param {number} centralDirOffset - Offset of central dir header
    * @return {ZipEntry} - ZipEntry object
    */
-  constructor(data: Buffer) {
+  constructor(data: Buffer, centralDirOffset: number) {
     this.data = data;
+    this.setCentralDirOffset(centralDirOffset);
   }
 
   /**
@@ -73,7 +75,7 @@ export class ZipEntry implements IZipEntry {
    * @param {number} offset - CentralDirectory Header offset
    * @return {ZipEntry} Zip entry - class reference for chain call
    */
-  public setCentralDirOffset(offset: number): ZipEntry {
+  private setCentralDirOffset(offset: number): ZipEntry {
     this.CDH = new CentralDirectory(this.data, offset);
     const fieldsOffset = this.CDH.getSize() + offset;
     this.initName(fieldsOffset);

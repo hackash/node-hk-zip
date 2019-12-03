@@ -3,13 +3,11 @@
  */
 
 import { ZipEntryDescription } from './ZipEntryDescription';
-import { ZipEntry } from '../ZipEntry';
 
 /**
  * @interface IZipEntry - Specifies public methods of ZipEntry class
  */
 export interface IZipEntry {
-  setCentralDirOffset(offset: number): ZipEntry;
 
   describe(): ZipEntryDescription;
 
