@@ -1,6 +1,6 @@
 {
   "name": "node-hk-zip",
-  "version": "1.0.2",
+  "version": "1.0.3-alpha.0",
   "description": "UNZIP implementation for NodeJS",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
