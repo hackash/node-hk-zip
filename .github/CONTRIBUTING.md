@@ -13,4 +13,5 @@ email, or any other method with the owners of this repository before making a ch
    Pull Request would represent. The versioning scheme we use is [SemVer](http://semver.org/).
 4. You may merge the Pull Request in once you have the sign-off of the repository owner, or if you 
    do not have permission to do that, you may request the second reviewer to merge it for you.
+5. The module has 0 dependencies from external NPM packages, please keep that in mind   
    
