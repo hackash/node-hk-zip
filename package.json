@@ -7,7 +7,21 @@
   "module": "build/module/index.js",
   "repository": "https://github.com/hackash/node-hk-zip",
   "license": "MIT",
-  "keywords": [],
+  "keywords": [
+    "unzipping-files",
+    "programmatic-unzip",
+    "typescript",
+    "deflate",
+    "inflate",
+    "stored",
+    "buffer",
+    "node",
+    "nodejs",
+    "unzip",
+    "zlib",
+    "uncompress",
+    "archives"
+  ],
   "scripts": {
     "describe": "npm-scripts-info",
     "build": "run-s clean && run-p build:*",

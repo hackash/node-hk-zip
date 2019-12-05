@@ -17,13 +17,18 @@ export class MethodInflate extends CompressionMethod {
    */
   public decompress(): Promise<Buffer> {
     const inflate = zlb.createInflateRaw();
+    const data = [];
     return new Promise((resolve, reject) => {
-      inflate.on('data', data => {
-        resolve(data);
+      inflate.on('data', chunk => {
+        data.push(chunk);
       });
 
       inflate.on('error', e => {
         reject(e);
+      });
+
+      inflate.on('end', () => {
+        resolve(Buffer.concat(data));
       });
 
       inflate.end(this.data);
