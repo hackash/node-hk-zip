@@ -8,7 +8,6 @@
 export default class CRC32 {
   /**
    * Creates CRC-32 table for checksum verification
-   * (NOTE: this method is incomplete, TODO fix this to return proper CRC-32)
    * @return {number} crc - Calculated CRC-32 value
    */
   public static calculate(input: Buffer): number {
@@ -23,9 +22,7 @@ export default class CRC32 {
     }
     crc = ~c1;
     buffer.writeInt32LE(crc & 0xffffffff, 0);
-    // return buffer.readUInt32LE(0);
-    /* TODO return calculated CRC */
-    return 0;
+    return buffer.readUInt32LE(0);
   }
 
   /**

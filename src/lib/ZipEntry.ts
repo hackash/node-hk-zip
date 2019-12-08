@@ -4,16 +4,16 @@
 
 import path from 'path';
 
-import CRC32 from './CRC32';
-import { InvalidCRC32Error } from './errors/InvalidCRC32Error';
 import { UnsupportedCompressionError } from './errors/UnsupportedCompressionError';
-import { CentralDirectory } from './headers/CentralDirectory';
-import { DataDescriptor } from './headers/DataDescriptor';
-import { LocalFileHeader } from './headers/LocalFileHeader';
-import { IZipEntry } from './interfaces/ZipEntry';
 import { IZipEntryDescription } from './interfaces/ZipEntryDescription';
+import { InvalidCRC32Error } from './errors/InvalidCRC32Error';
+import { CentralDirectory } from './headers/CentralDirectory';
+import { LocalFileHeader } from './headers/LocalFileHeader';
+import { DataDescriptor } from './headers/DataDescriptor';
 import { MethodInflate } from './methods/MethodInflate';
 import { MethodStored } from './methods/MethodStored';
+import { IZipEntry } from './interfaces/ZipEntry';
+import CRC32 from './CRC32';
 
 /**
  * Class representing a ZipEntry
@@ -40,6 +40,7 @@ export class ZipEntry implements IZipEntry {
   constructor(data: Buffer, centralDirOffset: number) {
     this.data = data;
     this.setCentralDirOffset(centralDirOffset);
+    this.initLocalFileHeader();
   }
 
   /**
@@ -53,13 +54,21 @@ export class ZipEntry implements IZipEntry {
       case this.methods.DEFLATED:
         if (!this.isDirectory()) {
           const inflate = new MethodInflate(compressed);
-          return inflate.decompress();
+          const decompressed = await inflate.decompress();
+          if (!this.verifyChecksum(decompressed)) {
+            throw new InvalidCRC32Error();
+          }
+          return decompressed;
         }
         break;
       case this.methods.STORED:
         if (!this.isDirectory()) {
           const stored = new MethodStored(compressed);
-          return stored.decompress();
+          const decompressed = await stored.decompress();
+          if (!this.verifyChecksum(decompressed)) {
+            throw new InvalidCRC32Error();
+          }
+          return decompressed;
         }
         break;
       default:
@@ -114,6 +123,30 @@ export class ZipEntry implements IZipEntry {
   }
 
   /**
+   * Getter for stored CRC-32 value
+   * @return {number} crc - stored CRC-32 value
+   */
+  public getCRC32(): number {
+    if ((this.CDH.getFlags() & 0x8) !== 0x8) {
+      return this.LFH.getCRC32();
+    } else {
+      const offset = this.CDH.getLocalHeaderOffset();
+      const start = this.LFH.getCompressedSliceOffset(offset);
+      const end = this.CDH.getCompressedSize();
+      const DDH = new DataDescriptor(this.data, start + end);
+      return DDH.getCRC32();
+    }
+  }
+
+  /**
+   * Initiates LocalFileHeader
+   */
+  private initLocalFileHeader(): void {
+    const offset = this.CDH.getLocalHeaderOffset();
+    this.LFH = new LocalFileHeader(this.data, offset);
+  }
+
+  /**
    * Initiates name of the ZipEntry
    * @param {number} offset - Name offset
    */
@@ -124,22 +157,11 @@ export class ZipEntry implements IZipEntry {
   /**
    * Verifies CRC-32 checksum
    * @param {Buffer} data - Compressed data
-   * @param {number} ext - DataDescriptor Header offset
    * @return {boolean} isValidCRC32 - true when checksum matches, otherwise false
    */
-  private verifyChecksum(data: Buffer, ext: number): boolean {
-    if ((this.CDH.getFlags() & 0x8) !== 0x8) {
-      /* TODO calculate and compare CRC */
-      // CRC32.calculate(data) === this.LFH.getCRC32();
-    } else {
-      const DDH = new DataDescriptor(this.data, ext);
-      DDH.getCRC32();
-      // console.log('DDH', DDH);
-      /* TODO calculate and compare CRC */
-      // CRC32.calculate(data) === this.DDH.getCRC32();
-    }
-    /* Mocking this now, TODO implement proper CRC calculation later */
-    return CRC32.calculate(data) === 0;
+  private verifyChecksum(data: Buffer): boolean {
+    const crc = this.getCRC32();
+    return crc === CRC32.calculate(data);
   }
 
   /**
@@ -160,13 +182,8 @@ export class ZipEntry implements IZipEntry {
    */
   private fetchRawCompressedData(): Buffer {
     const offset = this.CDH.getLocalHeaderOffset();
-    this.LFH = new LocalFileHeader(this.data, offset);
     const start = this.LFH.getCompressedSliceOffset(offset);
     const end = this.CDH.getCompressedSize();
-    const compressed = this.data.slice(start, start + end);
-    if (this.verifyChecksum(compressed, start + end)) {
-      return compressed;
-    }
-    throw new InvalidCRC32Error();
+    return this.data.slice(start, start + end);
   }
 }

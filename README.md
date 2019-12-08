@@ -18,7 +18,7 @@
 
 ## Todo list
 
-- Implement CRC-32 check 
+- ~~Implement CRC-32 check~~
 - Add support for encrypted ZIPs  
 - Add support for more compression methods  
 - Add support for ZIP64 
