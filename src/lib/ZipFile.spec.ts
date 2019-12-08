@@ -52,5 +52,6 @@ test(
     const entry = entries[0];
     t.is(entry.getName(), filename);
   },
-  /^[a-z]+\.(png)/, 'test.png'
+  /^[a-z]+\.(png)/,
+  'test.png'
 );
