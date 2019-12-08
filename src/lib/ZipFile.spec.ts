@@ -45,13 +45,13 @@ test(
 
 test(
   'Search entry by regexp in ZIP file',
-  (t, reg: RegExp, filename: string) => {
+  (t, reg: RegExp[], names: string) => {
     // tslint:disable-next-line:no-string-literal
     const entries: ZipEntry[] = t.context['zip'].findMatchingEntries(reg);
-    t.is(entries.length, 1);
+    t.is(entries.length, 2);
     const entry = entries[0];
-    t.is(entry.getName(), filename);
+    t.is(names.includes(entry.getName()), true);
   },
-  /^[a-z]+\.(png)/,
-  'test.png'
+  [/^[a-z]+\.(png)/, /^[a-z]+\.(txt)/],
+  ['test.png', 'test.txt']
 );

@@ -50,20 +50,20 @@ export class ZipFile implements IZipFile {
 
   /**
    * Searches entries by RegExp
-   * @param {RegExp} reg - match
+   * @param {RegExp} regs - match list
    * @return {Array<ZipEntry>} list - The list of entries
    */
-  public findMatchingEntries(reg: RegExp): ZipEntry[] {
+  public findMatchingEntries(regs: RegExp[]): ZipEntry[] {
     let index = this.EOCDH.getOffset();
     const count = this.EOCDH.getNumberOfEntries();
     const list = [];
     for (let i = 0; i < count; i++) {
       const entry = new ZipEntry(this.data, index);
-      if (reg.test(entry.getPath())) {
-        list.push(entry);
-        index += entry.getLocalHeaderSize();
-        continue;
-      }
+      regs.forEach(r => {
+        if (r.test(entry.getPath())) {
+          list.push(entry);
+        }
+      });
       index += entry.getLocalHeaderSize();
     }
     return list;

@@ -12,5 +12,5 @@ export interface IZipFile {
 
   findEntries(paths: string[]): ZipEntry[];
 
-  findMatchingEntries(reg: RegExp): ZipEntry[];
+  findMatchingEntries(reg: RegExp[]): ZipEntry[];
 }
