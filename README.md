@@ -99,6 +99,25 @@ Find an entry in the ZIP file - `findEntries(string[]): ZipEntry[]`
 { isDirectory: false, name: 'test.png', path: 'test.png' }
 ```
 
+Find matching entries by RegExp - `findMatchingEntries(reg: RegExp): ZipEntry[]` 
+
+
+``` 
+ const zip: ZipFile = new ZipFile(data);
+ const reg: RegExp = /^[a-z]+\.(png)/;
+ const entries: ZipEntry[] = zip.findMatchingEntries(reg);
+ 
+ entries.forEach((e: ZipEntry) => {
+    console.log(e.describe());
+ });
+```
+
+> Sample output
+
+```
+{ isDirectory: false, name: 'test.png', path: 'test.png' }
+```
+
 ## ZipEntry API
 
 Decompress file data - `decompress(): Promise<Buffer>` 
