@@ -42,3 +42,15 @@ test(
   },
   'does-not-exist.txt'
 );
+
+test(
+  'Search entry by regexp in ZIP file',
+  (t, reg: RegExp, filename: string) => {
+    // tslint:disable-next-line:no-string-literal
+    const entries: ZipEntry[] = t.context['zip'].findMatchingEntries(reg);
+    t.is(entries.length, 1);
+    const entry = entries[0];
+    t.is(entry.getName(), filename);
+  },
+  /^[a-z]+\.(png)/, 'test.png'
+);

@@ -28,6 +28,7 @@ export class ZipFile implements IZipFile {
     if (this.EOCDHoffset === -1) {
       throw new InvalidZipFormatError();
     }
+    this.EOCDH = new EndOfCentralDirectory(this.data, this.EOCDHoffset);
   }
 
   /**
@@ -45,6 +46,27 @@ export class ZipFile implements IZipFile {
    */
   public listAllEntries(): ZipEntry[] {
     return this.listEntries();
+  }
+
+  /**
+   * Searches entries by RegExp
+   * @param {RegExp} reg - match
+   * @return {Array<ZipEntry>} list - The list of entries
+   */
+  public findMatchingEntries(reg: RegExp): ZipEntry[] {
+    let index = this.EOCDH.getOffset();
+    const count = this.EOCDH.getNumberOfEntries();
+    const list = [];
+    for (let i = 0; i < count; i++) {
+      const entry = new ZipEntry(this.data, index);
+      if (reg.test(entry.getPath())) {
+        list.push(entry);
+        index += entry.getLocalHeaderSize();
+        continue;
+      }
+      index += entry.getLocalHeaderSize();
+    }
+    return list;
   }
 
   /**
@@ -74,7 +96,6 @@ export class ZipFile implements IZipFile {
    * @return {Array<ZipEntry>} list - The list of entries found
    */
   private listEntries(paths: string[] = []): ZipEntry[] {
-    this.EOCDH = new EndOfCentralDirectory(this.data, this.EOCDHoffset);
     let index = this.EOCDH.getOffset();
     const count = this.EOCDH.getNumberOfEntries();
     const list = [];
